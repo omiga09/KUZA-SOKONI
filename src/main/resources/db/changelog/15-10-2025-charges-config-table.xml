@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-charges-config-table" author="kuza">
+        <createTable tableName="charges_config">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="amount" type="DECIMAL(19,2)"/>
+            <column name="repayment_type" type="VARCHAR(20)"/>
+            <column name="collected_on" type="VARCHAR(50)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="submitted_at" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="charges_config" indexName="idx_config_collected_on">
+            <column name="collected_on"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

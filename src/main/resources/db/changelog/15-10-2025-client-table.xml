@@ -1,0 +1,39 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-client-table" author="kuza">
+        <createTable tableName="clients">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)"/>
+            <column name="second_name" type="VARCHAR(100)"/>
+            <column name="last_name" type="VARCHAR(100)"/>
+            <column name="phone_number" type="VARCHAR(50)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="date_of_birth" type="DATE"/>
+            <column name="gender" type="VARCHAR(20)"/>
+            <column name="address" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(20)"/>
+            <column name="is_verified" type="VARCHAR(20)"/>
+            <column name="nida_number" type="VARCHAR(100)"/>
+            <column name="barua_reference" type="VARCHAR(255)"/>
+            <column name="kitambulisho_type" type="VARCHAR(100)"/>
+            <column name="kitambulisho_number" type="VARCHAR(100)"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="submitted_at" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="clients" indexName="idx_client_status">
+            <column name="status"/>
+        </createIndex>
+
+        <createIndex tableName="clients" indexName="idx_client_verification">
+            <column name="is_verified"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

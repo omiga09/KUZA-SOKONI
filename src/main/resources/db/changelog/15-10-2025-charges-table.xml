@@ -1,0 +1,55 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-charges-table" author="kuza">
+        <createTable tableName="charges">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="amount" type="DECIMAL(19,2)"/>
+            <column name="repayment_type" type="VARCHAR(20)"/>
+            <column name="collected_on" type="VARCHAR(50)"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="submitted_at" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="charges" indexName="idx_charge_product">
+            <column name="product_id"/>
+        </createIndex>
+
+        <createIndex tableName="charges" indexName="idx_charge_collected_on">
+            <column name="collected_on"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="add-due-date-to-charges" author="kuza">
+        <addColumn tableName="charges">
+            <column name="due_date" type="DATE"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-is-paid-to-charges" author="kuza">
+        <addColumn tableName="charges">
+            <column name="is_paid" type="BOOLEAN" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-paid-amount-to-charges" author="kuza">
+        <addColumn tableName="charges">
+            <column name="paid_amount" type="DECIMAL(19,2)" defaultValueNumeric="0.00"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add-remaining-amount-to-charges" author="kuza">
+        <addColumn tableName="charges">
+            <column name="remaining_amount" type="DECIMAL(19,2)" defaultValueNumeric="0.00"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

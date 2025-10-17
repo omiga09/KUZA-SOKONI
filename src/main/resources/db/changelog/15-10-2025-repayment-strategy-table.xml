@@ -1,0 +1,27 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-repayment-strategy-table" author="kuza">
+        <createTable tableName="repayment_strategies">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="include_principal" type="BOOLEAN"/>
+            <column name="include_interest" type="BOOLEAN"/>
+            <column name="include_penalty" type="BOOLEAN"/>
+            <column name="include_fees" type="BOOLEAN"/>
+            <column name="include_charges" type="BOOLEAN"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="submitted_at" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="repayment_strategies" indexName="idx_strategy_name">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

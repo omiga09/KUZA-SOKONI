@@ -1,0 +1,60 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-loan-table" author="kuza">
+        <createTable tableName="loans">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="disbursed_date" type="DATE"/>
+            <column name="approval_date" type="DATE"/>
+            <column name="closed_date" type="DATE"/>
+            <column name="grace_period_days" type="INT"/>
+            <column name="penalty_amount" type="DECIMAL(19,2)"/>
+            <column name="principal" type="DECIMAL(19,2)"/>
+            <column name="outstanding" type="DECIMAL(19,2)"/>
+            <column name="fees" type="DECIMAL(19,2)"/>
+            <column name="charges" type="DECIMAL(19,2)"/>
+            <column name="interest" type="DECIMAL(19,2)"/>
+            <column name="tenure" type="VARCHAR(20)"/>
+            <column name="client_id" type="BIGINT"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="is_loan_restructured" type="VARCHAR(10)"/>
+            <column name="restructure_plan_id" type="BIGINT"/>
+            <column name="collateral" type="VARCHAR(255)"/>
+            <column name="collateral_amount" type="DECIMAL(19,2)"/>
+            <column name="repayment_schedule_id" type="BIGINT"/>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+            <column name="submitted_at" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="loans" indexName="idx_loan_status">
+            <column name="status"/>
+        </createIndex>
+
+        <createIndex tableName="loans" indexName="idx_loan_client">
+            <column name="client_id"/>
+        </createIndex>
+
+        <createIndex tableName="loans" indexName="idx_loan_product">
+            <column name="product_id"/>
+        </createIndex>
+
+    </changeSet>
+
+    <changeSet id="add-fk-loan-to-repayment-schedule" author="kuza">
+        <addForeignKeyConstraint
+                baseTableName="loans"
+                baseColumnNames="repayment_schedule_id"
+                referencedTableName="repayment_schedule"
+                referencedColumnNames="id"
+                constraintName="fk_loans_schedule"
+                onDelete="SET NULL"
+                onUpdate="CASCADE"/>
+    </changeSet>
+</databaseChangeLog>
