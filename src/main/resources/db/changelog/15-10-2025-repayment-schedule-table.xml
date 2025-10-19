@@ -9,51 +9,25 @@
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="installment_number" type="INT"/>
             <column name="days" type="INT"/>
             <column name="expected_date" type="DATE"/>
             <column name="paid_date" type="DATE"/>
             <column name="principal_due" type="DECIMAL(19,2)"/>
-            <column name="outstanding" type="DECIMAL(19,2)"/>
             <column name="interest" type="DECIMAL(19,2)"/>
             <column name="fees" type="DECIMAL(19,2)"/>
             <column name="penalty" type="DECIMAL(19,2)"/>
+            <column name="remaining_balance" type="DECIMAL(19,2)"/>
+            <column name="outstanding" type="DECIMAL(19,2)"/>
             <column name="late_by" type="INT"/>
+            <column name="status" type="VARCHAR(20)"/>
+            <column name="total_due" type="DECIMAL(19,2)"/>
+            <column name="total_paid" type="DECIMAL(19,2)"/>
+            <column name="loan_id" type="BIGINT"/>
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>
         </createTable>
-
-        <createIndex tableName="repayment_schedule" indexName="idx_schedule_expected_date">
-            <column name="expected_date"/>
-        </createIndex>
-
-        <createIndex tableName="repayment_schedule" indexName="idx_schedule_paid_date">
-            <column name="paid_date"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet id="add-status-to-repayment-schedule" author="kuza">
-        <addColumn tableName="repayment_schedule">
-            <column name="status" type="VARCHAR(20)"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="add-total-due-to-repayment-schedule" author="kuza">
-        <addColumn tableName="repayment_schedule">
-            <column name="total_due" type="DECIMAL(19,2)"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="add-total-paid-to-repayment-schedule" author="kuza">
-        <addColumn tableName="repayment_schedule">
-            <column name="total_paid" type="DECIMAL(19,2)"/>
-        </addColumn>
-    </changeSet>
-
-    <changeSet id="add-loan-id-to-repayment-schedule" author="kuza">
-        <addColumn tableName="repayment_schedule">
-            <column name="loan_id" type="BIGINT"/>
-        </addColumn>
 
         <addForeignKeyConstraint
                 baseTableName="repayment_schedule"
@@ -63,7 +37,18 @@
                 constraintName="fk_schedule_loan"
                 onDelete="SET NULL"
                 onUpdate="CASCADE"/>
-    </changeSet>
 
+        <createIndex tableName="repayment_schedule" indexName="idx_schedule_expected_date">
+            <column name="expected_date"/>
+        </createIndex>
+
+        <createIndex tableName="repayment_schedule" indexName="idx_schedule_paid_date">
+            <column name="paid_date"/>
+        </createIndex>
+
+        <createIndex tableName="repayment_schedule" indexName="idx_schedule_installment_number">
+            <column name="installment_number"/>
+        </createIndex>
+    </changeSet>
 
 </databaseChangeLog>

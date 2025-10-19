@@ -7,7 +7,7 @@
     <changeSet id="create-loan-table" author="kuza">
         <createTable tableName="loans">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="status" type="VARCHAR(50)"/>
             <column name="disbursed_date" type="DATE"/>
@@ -20,6 +20,9 @@
             <column name="fees" type="DECIMAL(19,2)"/>
             <column name="charges" type="DECIMAL(19,2)"/>
             <column name="interest" type="DECIMAL(19,2)"/>
+            <column name="interest_method" type="VARCHAR(50)"/>
+            <column name="annual_interest_rate" type="DECIMAL(5,2)"/>
+            <column name="number_of_installments" type="INT"/>
             <column name="tenure" type="VARCHAR(20)"/>
             <column name="client_id" type="BIGINT"/>
             <column name="product_id" type="BIGINT"/>
@@ -27,7 +30,6 @@
             <column name="restructure_plan_id" type="BIGINT"/>
             <column name="collateral" type="VARCHAR(255)"/>
             <column name="collateral_amount" type="DECIMAL(19,2)"/>
-            <column name="repayment_schedule_id" type="BIGINT"/>
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>
@@ -44,17 +46,6 @@
         <createIndex tableName="loans" indexName="idx_loan_product">
             <column name="product_id"/>
         </createIndex>
-
     </changeSet>
 
-    <changeSet id="add-fk-loan-to-repayment-schedule" author="kuza">
-        <addForeignKeyConstraint
-                baseTableName="loans"
-                baseColumnNames="repayment_schedule_id"
-                referencedTableName="repayment_schedule"
-                referencedColumnNames="id"
-                constraintName="fk_loans_schedule"
-                onDelete="SET NULL"
-                onUpdate="CASCADE"/>
-    </changeSet>
 </databaseChangeLog>

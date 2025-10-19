@@ -3,12 +3,14 @@ package com.kuza.kuzasokoni.domain.loan.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
 import com.kuza.kuzasokoni.domain.loan.enums.LoanRestructured;
 import com.kuza.kuzasokoni.domain.loan.enums.LoanStatus;
 import com.kuza.kuzasokoni.domain.loan.enums.Tenure;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
+import com.kuza.kuzasokoni.domain.product.enums.InterestMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +19,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Setter
@@ -51,6 +54,14 @@ public class Loan extends Auditable {
     private BigDecimal interest;
 
     @Enumerated(EnumType.STRING)
+    private InterestMethod interestMethod;
+
+    private BigDecimal annualInterestRate;
+
+    private Integer numberOfInstallments;
+
+
+    @Enumerated(EnumType.STRING)
     private Tenure tenure;
 
     @ManyToOne
@@ -72,9 +83,10 @@ public class Loan extends Auditable {
     private String collateral;
     private BigDecimal collateralAmount;
 
-    @ManyToOne
-    @JoinColumn(name = "repayment_schedule_id")
-    private RepaymentSchedule repaymentSchedule;
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<RepaymentSchedule> repaymentSchedules;
 
 
-}
+    }
+

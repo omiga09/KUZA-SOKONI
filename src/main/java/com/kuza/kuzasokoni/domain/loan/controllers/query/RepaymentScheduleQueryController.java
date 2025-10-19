@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/repayment-schedule/repayment-schedules")
+@RequestMapping("/api/loans/{loanId}/schedules")
 @RequiredArgsConstructor
 public class RepaymentScheduleQueryController {
 
     private final RepaymentScheduleQueryService service;
 
-    @GetMapping("/loan/{loanId}")
-    public ResponseEntity<List<RepaymentScheduleView>> getByLoan(@PathVariable Long loanId) {
+    @GetMapping
+    public ResponseEntity<List<RepaymentScheduleView>> getLoanSchedule(@PathVariable Long loanId) {
         return ResponseEntity.ok(service.getByLoan(loanId));
     }
 }

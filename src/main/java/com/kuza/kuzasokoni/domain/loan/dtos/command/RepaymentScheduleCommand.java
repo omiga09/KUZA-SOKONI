@@ -5,10 +5,12 @@ import java.time.LocalDate;
 
 public record RepaymentScheduleCommand(
         Long loanId,
+        Integer installmentNumber,
         Integer days,
         LocalDate expectedDate,
         BigDecimal principalDue,
         BigDecimal outstanding,
+        BigDecimal remainingBalance,
         BigDecimal interest,
         BigDecimal fees,
         BigDecimal penalty

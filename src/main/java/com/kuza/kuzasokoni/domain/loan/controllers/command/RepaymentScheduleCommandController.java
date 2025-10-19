@@ -1,28 +1,35 @@
 package com.kuza.kuzasokoni.domain.loan.controllers.command;
 
-
-import com.kuza.kuzasokoni.domain.loan.dtos.command.RepaymentScheduleCommand;
-import com.kuza.kuzasokoni.domain.loan.dtos.query.RepaymentScheduleView;
-import com.kuza.kuzasokoni.domain.loan.services.command.RepaymentScheduleCommandService;
+import com.kuza.kuzasokoni.domain.loan.entities.Loan;
+import com.kuza.kuzasokoni.domain.loan.entities.RepaymentSchedule;
+import com.kuza.kuzasokoni.domain.loan.repositories.LoanRepository;
+import com.kuza.kuzasokoni.domain.loan.services.command.RepaymentScheduleGenerationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/repayment-schedules")
+@RequestMapping("/api/loans")
 @RequiredArgsConstructor
 public class RepaymentScheduleCommandController {
 
-    private final RepaymentScheduleCommandService service;
+    private final LoanRepository loanRepository;
+    private final RepaymentScheduleGenerationService scheduleService;
 
-    @PostMapping
-    public ResponseEntity<RepaymentScheduleView> create(@RequestBody RepaymentScheduleCommand command) {
-        RepaymentScheduleView savedRepaymentScheduleView = service.create(command);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedRepaymentScheduleView);
+    @PostMapping("/{loanId}/generate-schedule")
+    public ResponseEntity<List<RepaymentSchedule>> generateSchedule(
+            @PathVariable Long loanId,
+            @RequestParam(required = false) LocalDate startDate
+    ) {
+        Loan loan = loanRepository.findById(loanId)
+                .orElseThrow(() -> new RuntimeException("Loan not found"));
+
+        LocalDate effectiveStartDate = startDate != null ? startDate : loan.getDisbursedDate();
+        List<RepaymentSchedule> schedules = scheduleService.generateSchedule(loan, effectiveStartDate);
+
+        return ResponseEntity.ok(schedules);
     }
-
 }

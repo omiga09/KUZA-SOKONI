@@ -7,7 +7,7 @@
     <changeSet id="create-client-table" author="kuza">
         <createTable tableName="clients">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(100)"/>
             <column name="second_name" type="VARCHAR(100)"/>

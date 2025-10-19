@@ -7,11 +7,13 @@ import java.time.LocalDate;
 
 public interface RepaymentScheduleView {
     Long getId();
+    Integer getInstallmentNumber();
     Integer getDays();
     LocalDate getExpectedDate();
     LocalDate getPaidDate();
     BigDecimal getPrincipalDue();
     BigDecimal getOutstanding();
+    BigDecimal getRemainingBalance();
     BigDecimal getInterest();
     BigDecimal getFees();
     BigDecimal getPenalty();
@@ -19,5 +21,4 @@ public interface RepaymentScheduleView {
     BigDecimal getTotalPaid();
     Integer getLateBy();
     ScheduleStatus getStatus();
-
 }

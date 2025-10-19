@@ -30,6 +30,10 @@ public class LoanCommandMapperImpl implements LoanCommandMapper {
         loan.setGracePeriodDays(cmd.getGracePeriodDays());
         loan.setCollateral(cmd.getCollateral());
         loan.setCollateralAmount(cmd.getCollateralAmount());
+        loan.setAnnualInterestRate(cmd.getAnnualInterestRate());
+        loan.setInterestMethod(cmd.getInterestMethod());
+        loan.setNumberOfInstallments(cmd.getNumberOfInstallments());
+
 
         if (cmd.getClientId() != null) {
             loan.setClient(clientRepository.getReferenceById(cmd.getClientId()));
@@ -39,9 +43,6 @@ public class LoanCommandMapperImpl implements LoanCommandMapper {
             loan.setProduct(productRepository.getReferenceById(cmd.getProductId()));
         }
 
-        if (cmd.getRepaymentScheduleId() != null) {
-            loan.setRepaymentSchedule(repaymentScheduleRepository.getReferenceById(cmd.getRepaymentScheduleId()));
-        }
 
         return loan;
     }
