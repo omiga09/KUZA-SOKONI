@@ -2,6 +2,7 @@ package com.kuza.kuzasokoni.domain.product.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuza.kuzasokoni.common.audit.Auditable;
+import com.kuza.kuzasokoni.domain.product.enums.ChargeDeductionOn;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
 import jakarta.persistence.*;
@@ -50,6 +51,9 @@ public class Charge extends Auditable {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Enumerated(EnumType.STRING)
+    private ChargeDeductionOn deductedOn;
+
     @NotNull(message = "isPaid status is required")
     private Boolean isPaid = false;
 
@@ -60,4 +64,7 @@ public class Charge extends Auditable {
     private BigDecimal remainingAmount;
 
     private LocalDate dueDate;
+
+
 }
+

@@ -23,6 +23,7 @@ public class FileStorageService {
     public String store(MultipartFile file) {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         Path targetLocation = storageLocation.resolve(fileName);
+
         try {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return fileName;

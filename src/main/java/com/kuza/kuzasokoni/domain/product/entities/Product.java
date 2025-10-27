@@ -62,20 +62,13 @@ public class Product extends Auditable {
 
     private BigDecimal collateralPercentage;
 
+    private List<Charge> productCharges;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "repayment_strategy_id", nullable = false)
     private RepaymentStrategy repaymentStrategy;
 
 
-
-  /*  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id")
-    private List<Charge> productCharge;*/
-
-
-   /* @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_penalty_id")
-    private List<Charge> overdueCharges;*/
 
 
 

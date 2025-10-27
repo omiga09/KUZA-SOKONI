@@ -50,6 +50,20 @@ public class ClientCommandController {
         return ResponseEntity.ok(documentation);
     }
 
+    @PostMapping(value = "/{id}/documentation/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Documentation> updateDocumentation(
+            @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id,
+            @RequestPart("nidaNumber") @NotBlank(message = "NIDA number is required") String nidaNumber,
+            @RequestPart("kitambulishoType") @NotBlank(message = "Kitambulisho type is required") String kitambulishoType,
+            @RequestPart("kitambulishoFile") @NotNull(message = "Kitambulisho file is required") MultipartFile kitambulishoFile,
+            @RequestPart("baruaFile") @NotNull(message = "Barua file is required") MultipartFile baruaFile
+    ) {
+        Documentation documentation = clientDocumentationService.updateDocumentation(
+                id, baruaFile, kitambulishoFile, nidaNumber, kitambulishoType
+        );
+        return ResponseEntity.ok(documentation);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Client> update(

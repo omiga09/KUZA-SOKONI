@@ -2,6 +2,7 @@ package com.kuza.kuzasokoni.domain.product.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuza.kuzasokoni.common.audit.Auditable;
+import com.kuza.kuzasokoni.domain.product.enums.ChargeDeductionOn;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
 import jakarta.persistence.*;
@@ -47,4 +48,9 @@ public class ChargesConfig extends Auditable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CollectedOn collectedOn;
+
+    @Enumerated(EnumType.STRING)
+    private ChargeDeductionOn deductedOn;
+
+
 }

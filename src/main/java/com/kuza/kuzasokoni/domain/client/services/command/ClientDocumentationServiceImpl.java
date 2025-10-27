@@ -15,40 +15,43 @@ public class ClientDocumentationServiceImpl implements ClientDocumentationServic
 
     private final ClientRepository clientRepository;
     private final FileStorageService fileStorageService;
+    private final ClientRepository clientRepo;
+
 
     @Override
     public Documentation uploadDocumentation(Long clientId, MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
+        Client client = clientRepo.findById(clientId).orElseThrow(()->
+                new ClientNotFoundException(clientId));
 
-        if (clientId == null || clientId <= 0) {
-            throw new IllegalArgumentException("Client ID must be greater than 0");
-        }
-
-
-        if (baruaFile == null || baruaFile.isEmpty()) {
-            throw new IllegalArgumentException("Barua file is required and must not be empty");
-        }
-
-        if (kitambulishoFile == null || kitambulishoFile.isEmpty()) {
-            throw new IllegalArgumentException("Kitambulisho file is required and must not be empty");
-        }
-
-
-        if (!StringUtils.hasText(nidaNumber)) {
-            throw new IllegalArgumentException("NIDA number is required");
-        }
-
-        if (!StringUtils.hasText(kitambulishoType)) {
-            throw new IllegalArgumentException("Kitambulisho type is required");
-        }
-
-
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ClientNotFoundException(clientId));
-
+        validateUploadInformation(baruaFile,kitambulishoFile,nidaNumber,kitambulishoType);
 
         String baruaFileName = fileStorageService.store(baruaFile);
         String kitambulishoFileName = fileStorageService.store(kitambulishoFile);
 
+        Documentation documentation = Documentation.builder()
+                .nidaNumber(nidaNumber.trim())
+                .kitambulishoType(kitambulishoType.trim())
+                .kitambulishoFileName(kitambulishoFileName)
+                .baruaFileName(baruaFileName)
+                .client(client)
+                .build();
+
+
+
+        client.setDocumentation(documentation);
+        Client savedClient = clientRepository.save(client);
+
+        return savedClient.getDocumentation();
+    }
+
+    @Override
+    public Documentation updateDocumentation(Long clientId, MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
+        Client client = clientRepo.findById(clientId).orElseThrow(()->
+                new ClientNotFoundException(clientId));
+
+        validateUploadInformation(baruaFile,kitambulishoFile,nidaNumber,kitambulishoType);
+        String baruaFileName = fileStorageService.store(baruaFile);
+        String kitambulishoFileName = fileStorageService.store(kitambulishoFile);
 
         Documentation documentation = Documentation.builder()
                 .nidaNumber(nidaNumber.trim())
@@ -62,5 +65,25 @@ public class ClientDocumentationServiceImpl implements ClientDocumentationServic
         Client savedClient = clientRepository.save(client);
 
         return savedClient.getDocumentation();
+    }
+
+
+    private void validateUploadInformation(MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType){
+
+        if (baruaFile == null || baruaFile.isEmpty()) {
+            throw new IllegalArgumentException("Barua file is required and must not be empty");
+        }
+
+        if (kitambulishoFile == null || kitambulishoFile.isEmpty()) {
+            throw new IllegalArgumentException("Kitambulisho file is required and must not be empty");
+        }
+
+        if (!StringUtils.hasText(nidaNumber)) {
+            throw new IllegalArgumentException("NIDA number is required");
+        }
+
+        if (!StringUtils.hasText(kitambulishoType)) {
+            throw new IllegalArgumentException("Kitambulisho type is required");
+        }
     }
 }

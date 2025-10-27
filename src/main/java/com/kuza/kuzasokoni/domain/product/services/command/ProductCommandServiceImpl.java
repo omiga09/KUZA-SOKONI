@@ -3,22 +3,33 @@ package com.kuza.kuzasokoni.domain.product.services.command;
 
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductUpdateCommand;
+import com.kuza.kuzasokoni.domain.product.entities.Charge;
+import com.kuza.kuzasokoni.domain.product.entities.ChargesConfig;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 import com.kuza.kuzasokoni.domain.product.entities.RepaymentStrategy;
+import com.kuza.kuzasokoni.domain.product.exception.ChargeNotFoundException;
 import com.kuza.kuzasokoni.domain.product.exception.ProductNotFoundException;
+import com.kuza.kuzasokoni.domain.product.mappers.ChargeCommandMapper;
 import com.kuza.kuzasokoni.domain.product.mappers.ProductCommandMapper;
+import com.kuza.kuzasokoni.domain.product.repositories.ChargeRepository;
+import com.kuza.kuzasokoni.domain.product.repositories.ChargesConfigRepository;
 import com.kuza.kuzasokoni.domain.product.repositories.ProductRepository;
 import com.kuza.kuzasokoni.domain.product.repositories.RepaymentStrategyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductCommandServiceImpl implements ProductCommandService {
 
     private final ProductRepository productRepository;
+    private final ChargesConfigRepository chargesConfigRepo;
+    private final ChargeRepository chargesRepo;
     private final ProductCommandMapper mapper;
     private final RepaymentStrategyRepository repaymentStrategyRepository;
+    private final ChargeCommandMapper cMapper;
 
     @Override
     public Product createProduct(ProductCreateCommand cmd) {
@@ -29,7 +40,23 @@ public class ProductCommandServiceImpl implements ProductCommandService {
         product.setRepaymentStrategy(strategy);
 
         return productRepository.save(product);
+        productRepository.save(product);
+
+        List<ChargesConfig> cfg = cmd.getChargeConfigId().stream()
+                .map(id -> chargesConfigRepo.findById(id)
+                        .orElseThrow(() -> new ChargeNotFoundException(id)))
+                .toList();
+
+        List<Charge> pCharges = new java.util.ArrayList<>(List.of());
+
+        for (ChargesConfig chargesConfig : cfg) {
+            pCharges.add(cMapper.toEntityFromConfig(chargesConfig,product));
+        }
+
+        chargesRepo.saveAllAndFlush(pCharges);
+        return product;
     }
+
 
     @Override
     public Product updateProduct(ProductUpdateCommand cmd) {
