@@ -18,9 +18,6 @@
             <column name="tenure_plan" type="VARCHAR(100)"/>
             <column name="repaid_every" type="VARCHAR(20)"/>
             <column name="repaid_frequency" type="INT"/>
-            <column name="penalty_percentage" type="DECIMAL(5,2)"/>
-            <column name="charges_percentage" type="DECIMAL(5,2)"/>
-            <column name="fees" type="DECIMAL(19,2)"/>
             <column name="grace_period_days" type="INT"/>
             <column name="currency" type="VARCHAR(10)"/>
             <column name="status" type="VARCHAR(20)"/>
@@ -39,4 +36,5 @@
             <column name="status"/>
         </createIndex>
     </changeSet>
+
 </databaseChangeLog>

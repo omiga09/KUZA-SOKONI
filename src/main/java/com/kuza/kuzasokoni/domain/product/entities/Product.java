@@ -1,20 +1,21 @@
 package com.kuza.kuzasokoni.domain.product.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.product.enums.Currency;
 import com.kuza.kuzasokoni.domain.product.enums.InterestMethod;
 import com.kuza.kuzasokoni.domain.product.enums.ProductStatus;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentFrequency;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
 @Getter
 @NoArgsConstructor
@@ -29,10 +30,14 @@ public class Product extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "product name is required")
     private String productName;
+
+    @NotBlank(message = "short name is required")
     private String shortName;
 
     private BigDecimal minimumPrincipal;
+
     private BigDecimal maximumPrincipal;
 
     private BigDecimal interest;
@@ -47,10 +52,6 @@ public class Product extends Auditable {
 
     private Integer repaidFrequency;
 
-    private BigDecimal penaltyPercentage;
-    private BigDecimal chargesPercentage;
-    private BigDecimal fees;
-
     private Integer gracePeriodDays;
 
     @Enumerated(EnumType.STRING)
@@ -61,7 +62,21 @@ public class Product extends Auditable {
 
     private BigDecimal collateralPercentage;
 
-    @Column(name = "repayment_strategy_id")
-    private Long repaymentStrategyId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "repayment_strategy_id", nullable = false)
+    private RepaymentStrategy repaymentStrategy;
+
+
+
+  /*  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id")
+    private List<Charge> productCharge;*/
+
+
+   /* @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_penalty_id")
+    private List<Charge> overdueCharges;*/
+
+
 
 }

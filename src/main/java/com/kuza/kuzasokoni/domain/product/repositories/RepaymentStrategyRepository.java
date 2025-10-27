@@ -17,4 +17,8 @@ public interface RepaymentStrategyRepository extends JpaRepository<RepaymentStra
 
     @Query("SELECT r FROM RepaymentStrategy r WHERE r.id = :id")
     Optional<RepaymentStrategyView> findProjectedById(Long id);
+
+
+
+    boolean existsByName(String name);
 }

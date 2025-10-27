@@ -8,4 +8,5 @@ public interface ClientCommandService {
     Client createClient(ClientCreateCommand cmd);
     Client updateClient(ClientUpdateCommand cmd);
     void deleteClient(Long id);
+    Client submitClient(Long id);
 }

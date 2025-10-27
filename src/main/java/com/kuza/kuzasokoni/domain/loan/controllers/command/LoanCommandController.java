@@ -34,12 +34,6 @@ public class LoanCommandController {
         return ResponseEntity.ok(loan);
     }
 
-    @PutMapping("/penalize")
-    public ResponseEntity<Loan> penalize(@RequestBody LoanPenaltyCommand cmd) {
-        Loan loan = loanCommandService.applyCharges(cmd);
-        return ResponseEntity.ok(loan);
-    }
-
     @PutMapping("/restructure")
     public ResponseEntity<Loan> restructure(@RequestBody LoanRestructureCommand cmd) {
         Loan loan = loanCommandService.restructureLoan(cmd);

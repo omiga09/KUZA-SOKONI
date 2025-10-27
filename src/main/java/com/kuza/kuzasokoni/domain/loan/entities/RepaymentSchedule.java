@@ -1,14 +1,10 @@
 package com.kuza.kuzasokoni.domain.loan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.loan.enums.ScheduleStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,7 +26,6 @@ public class RepaymentSchedule extends Auditable {
     private Long id;
 
     private Integer installmentNumber;
-
     private Integer days;
 
     private LocalDate expectedDate;
@@ -42,7 +37,6 @@ public class RepaymentSchedule extends Auditable {
     private BigDecimal penalty;
 
     private BigDecimal remainingBalance;
-
     private BigDecimal outstanding;
 
     private Integer lateBy;
@@ -53,7 +47,7 @@ public class RepaymentSchedule extends Auditable {
     private BigDecimal totalDue;
     private BigDecimal totalPaid;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "loan_id")
     @JsonBackReference
     private Loan loan;

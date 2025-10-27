@@ -13,9 +13,10 @@ public class DocumentationCommandMapperImpl implements DocumentationCommandMappe
 
         return Documentation.builder()
                 .nidaNumber(cmd.getNidaNumber())
-                .baruaReference(cmd.getBaruaReference())
                 .kitambulishoType(cmd.getKitambulishoType())
-                .kitambulishoNumber(cmd.getKitambulishoNumber())
+                .kitambulishoFileName(cmd.getKitambulishoFileName())
+                .baruaFileName(cmd.getBaruaFileName())
                 .build();
     }
+
 }

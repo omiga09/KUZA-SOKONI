@@ -28,25 +28,33 @@ public class TransactionsCommandServiceImpl implements TransactionsCommandServic
         tx.setDirection(TransactionDirection.TO);
         tx.setDate(LocalDate.now());
         tx.setOnEntity(TransactionEntity.PRINCIPAL);
+        tx.setInitiator("system");
         transactionRepository.save(tx);
     }
 
     @Override
     public void logCharges(Loan loan, BigDecimal penalty, BigDecimal fees, BigDecimal interest, BigDecimal charges) {
         if (penalty != null && penalty.compareTo(BigDecimal.ZERO) > 0) {
-            transactionRepository.save(new Transaction(loan, penalty, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.PENALTY));
+            Transaction tx = new Transaction(loan, penalty, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.PENALTY);
+            tx.setInitiator("system");
+            transactionRepository.save(tx);
         }
         if (fees != null && fees.compareTo(BigDecimal.ZERO) > 0) {
-            transactionRepository.save(new Transaction(loan, fees, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.FEES));
+            Transaction tx = new Transaction(loan, fees, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.FEES);
+            tx.setInitiator("system");
+            transactionRepository.save(tx);
         }
         if (interest != null && interest.compareTo(BigDecimal.ZERO) > 0) {
-            transactionRepository.save(new Transaction(loan, interest, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.INTEREST));
+            Transaction tx = new Transaction(loan, interest, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.INTEREST);
+            tx.setInitiator("system");
+            transactionRepository.save(tx);
         }
         if (charges != null && charges.compareTo(BigDecimal.ZERO) > 0) {
-            transactionRepository.save(new Transaction(loan, charges, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.CHARGES));
+            Transaction tx = new Transaction(loan, charges, TransactionType.COLLECTION, TransactionDirection.TO, LocalDate.now(), TransactionEntity.CHARGES);
+            tx.setInitiator("system");
+            transactionRepository.save(tx);
         }
     }
-
 
     @Override
     public void logRestructure(Loan loan) {
@@ -57,6 +65,7 @@ public class TransactionsCommandServiceImpl implements TransactionsCommandServic
         tx.setDirection(TransactionDirection.TO);
         tx.setDate(LocalDate.now());
         tx.setOnEntity(TransactionEntity.PRINCIPAL);
+        tx.setInitiator("system");
         transactionRepository.save(tx);
     }
 
@@ -69,6 +78,7 @@ public class TransactionsCommandServiceImpl implements TransactionsCommandServic
         tx.setDirection(TransactionDirection.TO);
         tx.setDate(LocalDate.now());
         tx.setOnEntity(TransactionEntity.PRINCIPAL);
+        tx.setInitiator("system");
         transactionRepository.save(tx);
     }
 }

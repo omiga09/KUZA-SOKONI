@@ -1,9 +1,11 @@
 package com.kuza.kuzasokoni.domain.product.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
 @Getter
 @NoArgsConstructor
@@ -27,25 +30,34 @@ public class Charge extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Charge name is required")
+    @Size(max = 100, message = "Charge name must not exceed 100 characters")
     private String name;
+
+    @NotNull(message = "Charge amount is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than 0")
     private BigDecimal amount;
 
+    @NotNull(message = "Repayment type is required")
     @Enumerated(EnumType.STRING)
     private RepaymentType repaymentType;
 
+    @NotNull(message = "CollectedOn is required")
     @Enumerated(EnumType.STRING)
     private CollectedOn collectedOn;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-
+    @NotNull(message = "isPaid status is required")
     private Boolean isPaid = false;
+
+    @DecimalMin(value = "0.0", message = "Paid amount must be zero or positive")
     private BigDecimal paidAmount;
+
+    @DecimalMin(value = "0.0", message = "Remaining amount must be zero or positive")
     private BigDecimal remainingAmount;
+
     private LocalDate dueDate;
-
-
 }
-

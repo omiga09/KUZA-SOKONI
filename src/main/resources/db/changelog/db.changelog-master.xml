@@ -14,4 +14,5 @@
     <include file="db/changelog/15-10-2025-repayment-schedule-table.xml"/>
     <include file="db/changelog/15-10-2025-transactions-table.xml"/>
     <include file="db/changelog/15-10-2025-client-guarantors.xml"/>
+    <include file="db/changelog/15-10-2025-client-documentation-table.xml"/>
 </databaseChangeLog>

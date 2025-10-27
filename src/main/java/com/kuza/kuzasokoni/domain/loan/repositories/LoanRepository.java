@@ -37,4 +37,8 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 """)
     Optional<LoanRepaymentView> findRepaymentViewById(@Param("loanId") Long loanId);
 
+    @Query("SELECT l FROM Loan l JOIN FETCH l.repaymentSchedules")
+    List<Loan> findAllWithSchedules();
+
+
 }

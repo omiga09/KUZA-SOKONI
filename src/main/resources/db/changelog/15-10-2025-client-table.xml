@@ -19,10 +19,6 @@
             <column name="address" type="VARCHAR(255)"/>
             <column name="status" type="VARCHAR(20)"/>
             <column name="is_verified" type="VARCHAR(20)"/>
-            <column name="nida_number" type="VARCHAR(100)"/>
-            <column name="barua_reference" type="VARCHAR(255)"/>
-            <column name="kitambulisho_type" type="VARCHAR(100)"/>
-            <column name="kitambulisho_number" type="VARCHAR(100)"/>
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>

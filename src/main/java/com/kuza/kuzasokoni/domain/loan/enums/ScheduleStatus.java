@@ -6,5 +6,6 @@ public enum ScheduleStatus {
     PAID,
     OVERDUE,
     WAIVED,
-    WRITTEN_OFF
+    WRITTEN_OFF,
+    LATE
 }

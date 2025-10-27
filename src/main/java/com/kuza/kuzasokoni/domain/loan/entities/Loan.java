@@ -1,21 +1,15 @@
 package com.kuza.kuzasokoni.domain.loan.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
-import com.kuza.kuzasokoni.domain.loan.enums.LoanRestructured;
-import com.kuza.kuzasokoni.domain.loan.enums.LoanStatus;
-import com.kuza.kuzasokoni.domain.loan.enums.Tenure;
+import com.kuza.kuzasokoni.domain.loan.enums.*;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 import com.kuza.kuzasokoni.domain.product.enums.InterestMethod;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -57,19 +51,17 @@ public class Loan extends Auditable {
     private InterestMethod interestMethod;
 
     private BigDecimal annualInterestRate;
-
     private Integer numberOfInstallments;
-
 
     @Enumerated(EnumType.STRING)
     private Tenure tenure;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     @JsonIgnore
     private Client client;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Product product;
@@ -86,7 +78,4 @@ public class Loan extends Auditable {
     @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<RepaymentSchedule> repaymentSchedules;
-
-
-    }
-
+}

@@ -2,8 +2,11 @@ package com.kuza.kuzasokoni.domain.product.mappers;
 
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductUpdateCommand;
+import com.kuza.kuzasokoni.domain.product.entities.Charge;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -22,14 +25,13 @@ public class ProductCommandMapperImpl implements ProductCommandMapper {
         product.setTenurePlan(cmd.getTenurePlan());
         product.setRepaidEvery(cmd.getRepaidEvery());
         product.setRepaidFrequency(cmd.getRepaidFrequency());
-        product.setPenaltyPercentage(cmd.getPenaltyPercentage());
-        product.setChargesPercentage(cmd.getChargesPercentage());
-        product.setFees(cmd.getFees());
         product.setGracePeriodDays(cmd.getGracePeriodDays());
         product.setCurrency(cmd.getCurrency());
+       // product.setOverdueCharges(cmd.getOverDues());
+       // product.setProductCharge(cmd.getCharges());
         product.setStatus(cmd.getStatus());
         product.setCollateralPercentage(cmd.getCollateralPercentage());
-        product.setRepaymentStrategyId(cmd.getRepaymentStrategyId());
+
         return product;
     }
 
@@ -44,14 +46,12 @@ public class ProductCommandMapperImpl implements ProductCommandMapper {
         if (cmd.getTenurePlan() != null) product.setTenurePlan(cmd.getTenurePlan());
         if (cmd.getRepaidEvery() != null) product.setRepaidEvery(cmd.getRepaidEvery());
         if (cmd.getRepaidFrequency() != null) product.setRepaidFrequency(cmd.getRepaidFrequency());
-        if (cmd.getPenaltyPercentage() != null) product.setPenaltyPercentage(cmd.getPenaltyPercentage());
-        if (cmd.getChargesPercentage() != null) product.setChargesPercentage(cmd.getChargesPercentage());
-        if (cmd.getFees() != null) product.setFees(cmd.getFees());
+
+
         if (cmd.getGracePeriodDays() != null) product.setGracePeriodDays(cmd.getGracePeriodDays());
         if (cmd.getCurrency() != null) product.setCurrency(cmd.getCurrency());
         if (cmd.getStatus() != null) product.setStatus(cmd.getStatus());
         if (cmd.getCollateralPercentage() != null) product.setCollateralPercentage(cmd.getCollateralPercentage());
-        if (cmd.getRepaymentStrategyId() != null) product.setRepaymentStrategyId(cmd.getRepaymentStrategyId());
-    }
+     }
 
 }

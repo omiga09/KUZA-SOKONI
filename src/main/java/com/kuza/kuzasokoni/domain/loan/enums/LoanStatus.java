@@ -9,5 +9,6 @@ public enum LoanStatus {
     CLOSED,
     PENDING_DISBURSAL,
     REJECTED,
-    ACTIVE
+    ACTIVE,
+    LATE
 }

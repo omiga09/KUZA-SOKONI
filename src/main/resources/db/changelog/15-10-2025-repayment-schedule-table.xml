@@ -4,51 +4,29 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create-repayment-schedule-table" author="kuza">
-        <createTable tableName="repayment_schedule">
+    <changeSet id="create-repayment-strategy-table" author="kuza">
+        <createTable tableName="repayment_strategies">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="installment_number" type="INT"/>
-            <column name="days" type="INT"/>
-            <column name="expected_date" type="DATE"/>
-            <column name="paid_date" type="DATE"/>
-            <column name="principal_due" type="DECIMAL(19,2)"/>
-            <column name="interest" type="DECIMAL(19,2)"/>
-            <column name="fees" type="DECIMAL(19,2)"/>
-            <column name="penalty" type="DECIMAL(19,2)"/>
-            <column name="remaining_balance" type="DECIMAL(19,2)"/>
-            <column name="outstanding" type="DECIMAL(19,2)"/>
-            <column name="late_by" type="INT"/>
-            <column name="status" type="VARCHAR(20)"/>
-            <column name="total_due" type="DECIMAL(19,2)"/>
-            <column name="total_paid" type="DECIMAL(19,2)"/>
-            <column name="loan_id" type="BIGINT"/>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="principal" type="INT"/>
+            <column name="interest" type="INT"/>
+            <column name="penalty" type="INT"/>
+            <column name="fees" type="INT"/>
+            <column name="charges" type="INT"/>
+
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>
         </createTable>
 
-        <addForeignKeyConstraint
-                baseTableName="repayment_schedule"
-                baseColumnNames="loan_id"
-                referencedTableName="loans"
-                referencedColumnNames="id"
-                constraintName="fk_schedule_loan"
-                onDelete="SET NULL"
-                onUpdate="CASCADE"/>
-
-        <createIndex tableName="repayment_schedule" indexName="idx_schedule_expected_date">
-            <column name="expected_date"/>
-        </createIndex>
-
-        <createIndex tableName="repayment_schedule" indexName="idx_schedule_paid_date">
-            <column name="paid_date"/>
-        </createIndex>
-
-        <createIndex tableName="repayment_schedule" indexName="idx_schedule_installment_number">
-            <column name="installment_number"/>
+        <createIndex tableName="repayment_strategies" indexName="idx_strategy_name">
+            <column name="name"/>
         </createIndex>
     </changeSet>
-
 </databaseChangeLog>
