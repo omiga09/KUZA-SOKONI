@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
     @NoArgsConstructor
@@ -34,4 +35,6 @@ import java.math.BigDecimal;
         private ProductStatus status;
         private BigDecimal collateralPercentage;
         private Long repaymentStrategyId;
+        private List<Long> chargeConfigId;
+
 }

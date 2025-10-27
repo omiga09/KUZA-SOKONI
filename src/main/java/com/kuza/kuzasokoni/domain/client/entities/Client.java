@@ -1,6 +1,8 @@
 package com.kuza.kuzasokoni.domain.client.entities;
 
 import com.kuza.kuzasokoni.common.audit.Auditable;
+import com.kuza.kuzasokoni.common.audit.Images;
+import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
 import jakarta.persistence.*;
@@ -46,8 +48,15 @@ public class Client extends Auditable {
     @Enumerated(EnumType.STRING)
     private VerificationStatus isVerified;
 
+
+    // fix relations and liquibase
+
+    @Column(nullable = false)
+    private List<EntityType> entityTypes;
+
     @Embedded
     private Documentation documentation;
+
 
     @ElementCollection
     @CollectionTable(name = "client_guarantors", joinColumns = @JoinColumn(name = "client_id"))

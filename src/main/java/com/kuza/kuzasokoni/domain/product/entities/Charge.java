@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.product.entities;
 
 import com.kuza.kuzasokoni.common.audit.Auditable;
+import com.kuza.kuzasokoni.domain.product.enums.ChargeDeductionOn;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
 import jakarta.persistence.*;
@@ -40,6 +41,8 @@ public class Charge extends Auditable {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Enumerated(EnumType.STRING)
+    private ChargeDeductionOn deductedOn;
 
     private Boolean isPaid = false;
     private BigDecimal paidAmount;

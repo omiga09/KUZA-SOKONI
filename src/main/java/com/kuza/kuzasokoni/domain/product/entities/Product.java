@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Setter
@@ -60,6 +61,8 @@ public class Product extends Auditable {
     private ProductStatus status;
 
     private BigDecimal collateralPercentage;
+
+    private List<Charge> productCharges;
 
     @Column(name = "repayment_strategy_id")
     private Long repaymentStrategyId;
