@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.domain.client.contollers.command;
 
+import com.kuza.kuzasokoni.common.repository.ImagesRepository;
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientCreateCommand;
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientUpdateCommand;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
@@ -27,6 +28,7 @@ public class ClientCommandController {
 
     private final ClientCommandService clientCommandService;
     private final ClientDocumentationService clientDocumentationService;
+    private final ImagesRepository imagesRepo;
 
 
     @PostMapping
@@ -47,6 +49,8 @@ public class ClientCommandController {
         Documentation documentation = clientDocumentationService.uploadDocumentation(
                 id, baruaFile, kitambulishoFile, nidaNumber, kitambulishoType
         );
+
+
         return ResponseEntity.ok(documentation);
     }
 

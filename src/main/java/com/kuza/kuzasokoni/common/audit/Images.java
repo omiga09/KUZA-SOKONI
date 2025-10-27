@@ -31,4 +31,13 @@ public class Images extends Auditable {
 
     @Column(nullable = false)
     private Long clientId;
+
+    public static Images of(String path, String name, EntityType entityType, Long clientId){
+       return Images.builder()
+                .path(path)
+                .name(name)
+                .entityType(entityType)
+                .clientId(clientId)
+                .build();
+    }
 }

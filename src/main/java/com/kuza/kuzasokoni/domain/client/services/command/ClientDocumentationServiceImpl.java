@@ -1,5 +1,8 @@
 package com.kuza.kuzasokoni.domain.client.services.command;
 
+import com.kuza.kuzasokoni.common.audit.Images;
+import com.kuza.kuzasokoni.common.repository.ImagesRepository;
+import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
 import com.kuza.kuzasokoni.domain.client.entities.Documentation;
 import com.kuza.kuzasokoni.domain.client.exceptions.ClientNotFoundException;
@@ -9,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ClientDocumentationServiceImpl implements ClientDocumentationService {
@@ -16,6 +22,7 @@ public class ClientDocumentationServiceImpl implements ClientDocumentationServic
     private final ClientRepository clientRepository;
     private final FileStorageService fileStorageService;
     private final ClientRepository clientRepo;
+    private final ImagesRepository imageRepo;
 
 
     @Override
@@ -35,9 +42,10 @@ public class ClientDocumentationServiceImpl implements ClientDocumentationServic
                 .baruaFileName(baruaFileName)
                 .client(client)
                 .build();
-
-
-
+        List<Images>  images =  new ArrayList<>();
+        images.add(Images.of(baruaFileName,baruaFileName, EntityType.SOKONI,client.getId()));
+        images.add(Images.of(kitambulishoFileName,kitambulishoFileName, EntityType.SOKONI,client.getId()));
+        imageRepo.saveAllAndFlush(images);
         client.setDocumentation(documentation);
         Client savedClient = clientRepository.save(client);
 
