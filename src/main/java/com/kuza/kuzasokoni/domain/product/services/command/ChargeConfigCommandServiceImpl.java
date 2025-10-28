@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.domain.product.services.command;
 
+import com.kuza.kuzasokoni.domain.product.dtos.query.ChargesConfigView;
 import com.kuza.kuzasokoni.domain.product.entities.ChargesConfig;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ChargesConfigCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ChargesConfigUpdateCommand;
@@ -16,16 +17,21 @@ public class ChargeConfigCommandServiceImpl implements ChargeConfigCommandServic
     private final ChargeConfigCommandMapper mapper;
 
     @Override
-    public ChargesConfig createConfig(ChargesConfigCreateCommand cmd) {
+    public ChargesConfigView createConfig(ChargesConfigCreateCommand cmd) {
         ChargesConfig config = mapper.toEntity(cmd);
-        return repository.save(config);
+        ChargesConfig saved = repository.save(config);
+        return repository.findProjectedById(saved.getId())
+                .orElseThrow(() -> new RuntimeException("Projection not found after save"));
     }
 
     @Override
-    public ChargesConfig updateConfig(ChargesConfigUpdateCommand cmd) {
+    public ChargesConfigView updateConfig(ChargesConfigUpdateCommand cmd) {
         ChargesConfig config = repository.findById(cmd.getId())
                 .orElseThrow(() -> new RuntimeException("Config not found"));
         mapper.updateEntity(cmd, config);
-        return repository.save(config);
+        ChargesConfig updated = repository.save(config);
+        return repository.findProjectedById(updated.getId())
+                .orElseThrow(() -> new RuntimeException("Projection not found after update"));
     }
 }
+

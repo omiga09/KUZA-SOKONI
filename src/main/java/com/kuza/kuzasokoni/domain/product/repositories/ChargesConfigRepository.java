@@ -32,4 +32,5 @@ public interface ChargesConfigRepository extends JpaRepository<ChargesConfig,Lon
     List<ChargesConfigView> findAllBy();
 
 
+
 }

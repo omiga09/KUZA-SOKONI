@@ -3,6 +3,7 @@ package com.kuza.kuzasokoni.domain.product.services.command;
 
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductUpdateCommand;
+import com.kuza.kuzasokoni.domain.product.dtos.query.ProductView;
 import com.kuza.kuzasokoni.domain.product.entities.Charge;
 import com.kuza.kuzasokoni.domain.product.entities.ChargesConfig;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
@@ -15,11 +16,11 @@ import com.kuza.kuzasokoni.domain.product.repositories.ChargeRepository;
 import com.kuza.kuzasokoni.domain.product.repositories.ChargesConfigRepository;
 import com.kuza.kuzasokoni.domain.product.repositories.ProductRepository;
 import com.kuza.kuzasokoni.domain.product.repositories.RepaymentStrategyRepository;
+import com.kuza.kuzasokoni.domain.product.services.query.ProductQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ProductCommandServiceImpl implements ProductCommandService {
@@ -30,40 +31,41 @@ public class ProductCommandServiceImpl implements ProductCommandService {
     private final ProductCommandMapper mapper;
     private final RepaymentStrategyRepository repaymentStrategyRepository;
     private final ChargeCommandMapper cMapper;
+    private final ProductQueryService productQueryService;
 
     @Override
-    public Product createProduct(ProductCreateCommand cmd) {
+    public ProductView createProduct(ProductCreateCommand cmd) {
         RepaymentStrategy strategy = repaymentStrategyRepository.findById(cmd.getRepaymentStrategyId())
                 .orElseThrow(() -> new RuntimeException("Repayment strategy not found"));
 
         Product product = mapper.toEntity(cmd);
         product.setRepaymentStrategy(strategy);
 
-        return productRepository.save(product);
-        productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
         List<ChargesConfig> cfg = cmd.getChargeConfigId().stream()
                 .map(id -> chargesConfigRepo.findById(id)
                         .orElseThrow(() -> new ChargeNotFoundException(id)))
                 .toList();
 
-        List<Charge> pCharges = new java.util.ArrayList<>(List.of());
+        List<Charge> pCharges = new java.util.ArrayList<>();
 
         for (ChargesConfig chargesConfig : cfg) {
-            pCharges.add(cMapper.toEntityFromConfig(chargesConfig,product));
+            pCharges.add(cMapper.toEntityFromConfig(chargesConfig, savedProduct));
         }
 
         chargesRepo.saveAllAndFlush(pCharges);
-        return product;
+
+        return productQueryService.getProductById(savedProduct.getId());
     }
 
-
     @Override
-    public Product updateProduct(ProductUpdateCommand cmd) {
+    public ProductView updateProduct(ProductUpdateCommand cmd) {
         Product product = productRepository.findById(cmd.getId())
                 .orElseThrow(() -> new ProductNotFoundException(cmd.getId()));
         mapper.updateEntity(cmd, product);
-        return productRepository.save(product);
+        Product updated = productRepository.save(product);
+        return productQueryService.getProductById(updated.getId());
     }
 
     @Override
@@ -72,5 +74,5 @@ public class ProductCommandServiceImpl implements ProductCommandService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
         productRepository.delete(product);
     }
-
 }
+

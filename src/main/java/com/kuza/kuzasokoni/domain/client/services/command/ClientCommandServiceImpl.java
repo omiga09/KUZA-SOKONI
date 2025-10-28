@@ -2,6 +2,7 @@ package com.kuza.kuzasokoni.domain.client.services.command;
 
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientCreateCommand;
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientUpdateCommand;
+import com.kuza.kuzasokoni.domain.client.dtos.query.ClientView;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
@@ -11,7 +12,6 @@ import com.kuza.kuzasokoni.domain.client.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -24,12 +24,11 @@ public class ClientCommandServiceImpl implements ClientCommandService {
 
     @Transactional
     @Override
-    public Client createClient(ClientCreateCommand cmd) {
+    public ClientView createClient(ClientCreateCommand cmd) {
         if (cmd == null) {
             throw new IllegalArgumentException("Client creation data cannot be null");
         }
 
-        // Optional: Trim key fields
         cmd.setFirstName(cmd.getFirstName().trim());
         cmd.setSecondName(cmd.getSecondName().trim());
         cmd.setLastName(cmd.getLastName().trim());
@@ -42,19 +41,21 @@ public class ClientCommandServiceImpl implements ClientCommandService {
         client.setStatus(ClientStatus.PENDING);
         client.setIsVerified(VerificationStatus.UNVERIFIED);
 
-        return clientRepository.save(client);
+        clientRepository.save(client);
+
+        return clientRepository.findClientViewById(client.getId())
+                .orElseThrow(() -> new ClientNotFoundException(client.getId()));
     }
 
     @Transactional
     @Override
-    public Client updateClient(ClientUpdateCommand cmd) {
+    public ClientView updateClient(ClientUpdateCommand cmd) {
         if (cmd == null || cmd.getId() == null) {
             throw new IllegalArgumentException("Client update data or ID cannot be null");
         }
 
         Client client = clientRepository.findById(cmd.getId())
                 .orElseThrow(() -> new ClientNotFoundException(cmd.getId()));
-
 
         cmd.setFirstName(cmd.getFirstName().trim());
         cmd.setSecondName(cmd.getSecondName().trim());
@@ -67,7 +68,10 @@ public class ClientCommandServiceImpl implements ClientCommandService {
         mapper.updateEntity(cmd, client);
         client.setUpdatedAt(LocalDateTime.now());
 
-        return clientRepository.save(client);
+        clientRepository.save(client);
+
+        return clientRepository.findClientViewById(client.getId())
+                .orElseThrow(() -> new ClientNotFoundException(client.getId()));
     }
 
     @Transactional
@@ -85,7 +89,7 @@ public class ClientCommandServiceImpl implements ClientCommandService {
 
     @Transactional
     @Override
-    public Client submitClient(Long id) {
+    public ClientView submitClient(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Client ID must be greater than 0");
         }
@@ -98,7 +102,9 @@ public class ClientCommandServiceImpl implements ClientCommandService {
         }
 
         client.setSubmittedAt(LocalDateTime.now());
+        clientRepository.save(client);
 
-        return clientRepository.save(client);
+        return clientRepository.findClientViewById(client.getId())
+                .orElseThrow(() -> new ClientNotFoundException(client.getId()));
     }
 }

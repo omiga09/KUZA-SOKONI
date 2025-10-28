@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.product.controllers.command;
 
-import com.kuza.kuzasokoni.domain.product.entities.ChargesConfig;
+import com.kuza.kuzasokoni.common.response.StandardResponse;
+import com.kuza.kuzasokoni.domain.product.dtos.query.ChargesConfigView;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ChargesConfigCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ChargesConfigUpdateCommand;
 import com.kuza.kuzasokoni.domain.product.services.command.ChargeConfigCommandService;
@@ -18,15 +19,18 @@ public class ChargeConfigCommandController {
     private final ChargeConfigCommandService service;
 
     @PostMapping
-    public ResponseEntity<ChargesConfig> create(@Valid @RequestBody ChargesConfigCreateCommand cmd) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.createConfig(cmd));
+    public ResponseEntity<StandardResponse<ChargesConfigView>> create(@Valid @RequestBody ChargesConfigCreateCommand cmd) {
+        ChargesConfigView view = service.createConfig(cmd);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                StandardResponse.success(201, "Charge config created successfully", "/api/charges/config/" + view.getId(), view)
+        );
     }
 
     @PutMapping
-    public ResponseEntity<ChargesConfig> update(@Valid @RequestBody ChargesConfigUpdateCommand cmd) {
-        return ResponseEntity.ok(service.updateConfig(cmd));
+    public ResponseEntity<StandardResponse<ChargesConfigView>> update(@Valid @RequestBody ChargesConfigUpdateCommand cmd) {
+        ChargesConfigView view = service.updateConfig(cmd);
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Charge config updated successfully", "/api/charges/config/" + view.getId(), view)
+        );
     }
 }
-
-
-

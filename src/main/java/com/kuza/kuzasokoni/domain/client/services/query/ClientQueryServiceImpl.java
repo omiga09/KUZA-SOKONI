@@ -2,6 +2,7 @@ package com.kuza.kuzasokoni.domain.client.services.query;
 
 
 import com.kuza.kuzasokoni.domain.client.dtos.query.ClientView;
+import com.kuza.kuzasokoni.domain.client.exceptions.ClientNotFoundException;
 import com.kuza.kuzasokoni.domain.client.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,19 +12,20 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-    public class ClientQueryServiceImpl implements ClientQueryService {
+public class ClientQueryServiceImpl implements ClientQueryService {
 
-        private final ClientRepository clientRepository;
+    private final ClientRepository clientRepository;
 
-        @Override
-        public List<ClientView> getAllClients() {
+    @Override
+    public List<ClientView> getAllClients() {
+        return clientRepository.findAllClientViews();
+    }
 
-            return clientRepository.findAllClientViews();
-        }
-
-        @Override
-        public Optional<ClientView> getClientById(Long id) {
-
-            return clientRepository.findClientViewById(id);
-        }
+    @Override
+    public ClientView getClientById(Long id) {
+        return clientRepository.findClientViewById(id)
+                .orElseThrow(() -> new ClientNotFoundException(id));
+    }
 }
+
+

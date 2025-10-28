@@ -1,7 +1,9 @@
 package com.kuza.kuzasokoni.domain.client.contollers.command;
 
+import com.kuza.kuzasokoni.common.response.StandardResponse;
 import com.kuza.kuzasokoni.domain.client.dtos.command.GuarantorCreateCommand;
 import com.kuza.kuzasokoni.domain.client.dtos.command.GuarantorUpdateCommand;
+import com.kuza.kuzasokoni.domain.client.dtos.query.ClientView;
 import com.kuza.kuzasokoni.domain.client.services.command.GuarantorCommandService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -21,7 +23,7 @@ public class ClientGuarantorCommandController {
     private final GuarantorCommandService clientGuarantorService;
 
     @PutMapping
-    public ResponseEntity<Void> updateGuarantors(
+    public ResponseEntity<StandardResponse<ClientView>> updateGuarantors(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long clientId,
             @RequestBody @Valid List<GuarantorCreateCommand> guarantors
     ) {
@@ -30,7 +32,10 @@ public class ClientGuarantorCommandController {
                 .guarantors(guarantors)
                 .build();
 
-        clientGuarantorService.updateGuarantors(cmd);
-        return ResponseEntity.noContent().build();
+        ClientView updatedClient = clientGuarantorService.updateGuarantors(cmd);
+
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Guarantors updated successfully", "/api/clients/" + clientId + "/guarantors", updatedClient)
+        );
     }
 }

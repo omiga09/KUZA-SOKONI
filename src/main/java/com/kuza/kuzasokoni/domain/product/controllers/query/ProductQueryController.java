@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.domain.product.controllers.query;
 
+import com.kuza.kuzasokoni.common.response.StandardResponse;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ProductView;
 import com.kuza.kuzasokoni.domain.product.services.query.ProductQueryService;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +17,18 @@ public class ProductQueryController {
     private final ProductQueryService productQueryService;
 
     @GetMapping
-    public ResponseEntity<List<ProductView>> getAllProducts() {
-        return ResponseEntity.ok(productQueryService.getAllProducts());
+    public ResponseEntity<StandardResponse<List<ProductView>>> getAllProducts() {
+        List<ProductView> products = productQueryService.getAllProducts();
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Products fetched successfully", "/api/products", products)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductView> getProductById(@PathVariable Long id) {
-        return productQueryService.getProductById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<StandardResponse<ProductView>> getProductById(@PathVariable Long id) {
+        ProductView product = productQueryService.getProductById(id);
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Product fetched successfully", "/api/products/" + id, product)
+        );
     }
 }

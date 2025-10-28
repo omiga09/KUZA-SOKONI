@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ClientQueryService {
     List<ClientView> getAllClients();
-    Optional<ClientView> getClientById(Long id);
+    ClientView getClientById(Long id);
 }

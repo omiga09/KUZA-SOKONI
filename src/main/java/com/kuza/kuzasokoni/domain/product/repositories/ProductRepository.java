@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.domain.product.repositories;
 
+import com.kuza.kuzasokoni.domain.product.dtos.query.ImageView;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ProductView;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,5 +39,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     WHERE p.id = :id
 """)
     Optional<ProductView> findProductViewById(@Param("id") Long id);
+
+    @Query("SELECT i FROM Images i WHERE i.id = :id")
+    Optional<ImageView> findProjectedById(Long id);
 
 }

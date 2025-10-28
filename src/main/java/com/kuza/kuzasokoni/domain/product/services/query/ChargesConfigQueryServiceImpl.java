@@ -19,9 +19,9 @@ public class ChargesConfigQueryServiceImpl implements ChargesConfigQueryService 
         return repository.findAllBy();
     }
 
+
     @Override
     public Optional<ChargesConfigView> getConfigById(Long id) {
-        return Optional.empty();
+        return repository.findProjectedById(id);
     }
-
 }

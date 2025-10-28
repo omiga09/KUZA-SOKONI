@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.client.services.query;
 
 import com.kuza.kuzasokoni.domain.client.dtos.query.DocumentationView;
+import com.kuza.kuzasokoni.domain.client.exceptions.ClientNotFoundException;
 import com.kuza.kuzasokoni.domain.client.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,9 @@ public class ClientDocumentationQueryServiceImpl implements ClientDocumentationQ
     private final ClientRepository clientRepository;
 
     @Override
-    public Optional<DocumentationView> getDocumentationByClientId(Long clientId) {
-        return clientRepository.findDocumentationByClientId(clientId);
+    public DocumentationView getDocumentationByClientId(Long clientId) {
+        return clientRepository.findDocumentationViewByClientId(clientId)
+                .orElseThrow(() -> new ClientNotFoundException(clientId));
     }
+
 }

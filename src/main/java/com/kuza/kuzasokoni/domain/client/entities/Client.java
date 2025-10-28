@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kuza.kuzasokoni.common.audit.Auditable;
-import com.kuza.kuzasokoni.common.audit.Images;
 import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
@@ -19,15 +18,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Setter
 @Getter
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(
         name = "clients",
         indexes = {
@@ -51,7 +49,7 @@ public class Client extends Auditable {
     private String lastName;
 
     @NotBlank
-    @Pattern(regexp = "^255\\d{9}$", message = "Guarantor's phone number must start with 255 and contain 12 digits.")
+    @Pattern(regexp = "^255\\d{9}$", message = "Phone number must start with 255 and contain 12 digits.")
     private String phoneNumber;
 
     @Email
@@ -69,31 +67,30 @@ public class Client extends Auditable {
     @NotBlank
     private String address;
 
-
     @Enumerated(EnumType.STRING)
     private ClientStatus status = ClientStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     private VerificationStatus isVerified = VerificationStatus.UNVERIFIED;
 
-
-    // fix relations and liquibase
-
-    @Column(nullable = false)
+    @ElementCollection(targetClass = EntityType.class)
+    @CollectionTable(name = "client_entity_types", joinColumns = @JoinColumn(name = "client_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "entity_type")
     private List<EntityType> entityTypes;
 
-    @Embedded
     @OneToOne(mappedBy = "client", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Documentation documentation;
 
-
     @ElementCollection
     @CollectionTable(name = "client_guarantors", joinColumns = @JoinColumn(name = "client_id"))
     @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "name")),
+            @AttributeOverride(name = "relationship", column = @Column(name = "relationship")),
             @AttributeOverride(name = "phoneNumber", column = @Column(name = "phone_number")),
+            @AttributeOverride(name = "address", column = @Column(name = "address")),
             @AttributeOverride(name = "isVerified", column = @Column(name = "is_verified"))
     })
-    private List<Guarantor> guarantors = new ArrayList<>();
-
+    private List<Guarantor> guarantors;
 }

@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.client.services.query;
 
 import com.kuza.kuzasokoni.domain.client.dtos.query.ClientGuarantorView;
+import com.kuza.kuzasokoni.domain.client.exceptions.ClientNotFoundException;
 import com.kuza.kuzasokoni.domain.client.repositories.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,9 @@ public class ClientGuarantorQueryServiceImpl implements ClientGuarantorQueryServ
     ClientRepository clientRepository;
 
     @Override
-    public Optional<ClientGuarantorView> getGuarantorsByClientId(Long clientId) {
-        return clientRepository.findClientGuarantors(clientId);
+    public ClientGuarantorView getGuarantorsByClientId(Long clientId) {
+        return clientRepository.findClientGuarantors(clientId)
+                .orElseThrow(() -> new ClientNotFoundException(clientId));
     }
+
 }

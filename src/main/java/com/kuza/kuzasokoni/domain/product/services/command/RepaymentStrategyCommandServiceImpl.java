@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.product.services.command;
 
 import com.kuza.kuzasokoni.domain.product.dtos.command.RepaymentStrategyCommand;
+import com.kuza.kuzasokoni.domain.product.dtos.query.RepaymentStrategyView;
 import com.kuza.kuzasokoni.domain.product.entities.RepaymentStrategy;
 import com.kuza.kuzasokoni.domain.product.repositories.RepaymentStrategyRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +14,11 @@ public class RepaymentStrategyCommandServiceImpl implements RepaymentStrategyCom
     private final RepaymentStrategyRepository repository;
 
     @Override
-    public RepaymentStrategy create(RepaymentStrategyCommand command) {
-
+    public RepaymentStrategyView create(RepaymentStrategyCommand command) {
         boolean exists = repository.existsByName(command.name());
         if (exists) {
             throw new IllegalArgumentException("Repayment strategy with name '" + command.name() + "' already exists.");
         }
-
 
         RepaymentStrategy strategy = RepaymentStrategy.builder()
                 .name(command.name())
@@ -30,6 +29,10 @@ public class RepaymentStrategyCommandServiceImpl implements RepaymentStrategyCom
                 .charges(command.charges())
                 .build();
 
-        return repository.save(strategy);
+        RepaymentStrategy saved = repository.save(strategy);
+
+        return repository.findProjectedById(saved.getId())
+                .orElseThrow(() -> new RuntimeException("Projection not found after save"));
     }
 }
+

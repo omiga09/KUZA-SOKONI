@@ -1,14 +1,11 @@
 package com.kuza.kuzasokoni.domain.client.contollers.query;
 
-
+import com.kuza.kuzasokoni.common.response.StandardResponse;
 import com.kuza.kuzasokoni.domain.client.dtos.query.ClientView;
 import com.kuza.kuzasokoni.domain.client.services.query.ClientQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,14 +17,19 @@ public class ClientQueryController {
     private final ClientQueryService clientQueryService;
 
     @GetMapping
-    public ResponseEntity<List<ClientView>> getAllClients() {
-        return ResponseEntity.ok(clientQueryService.getAllClients());
+    public ResponseEntity<StandardResponse<List<ClientView>>> getAllClients() {
+        List<ClientView> clients = clientQueryService.getAllClients();
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Clients fetched successfully", "/api/client/clients", clients)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientView> getClientById(@PathVariable Long id) {
-        return clientQueryService.getClientById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<StandardResponse<ClientView>> getClientById(@PathVariable Long id) {
+        ClientView client = clientQueryService.getClientById(id);
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Client fetched successfully", "/api/client/clients/" + id, client)
+        );
     }
+
 }

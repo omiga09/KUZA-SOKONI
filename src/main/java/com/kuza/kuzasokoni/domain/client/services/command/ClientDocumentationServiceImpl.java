@@ -1,8 +1,9 @@
 package com.kuza.kuzasokoni.domain.client.services.command;
 
 import com.kuza.kuzasokoni.common.audit.Images;
-import com.kuza.kuzasokoni.common.repository.ImagesRepository;
+import com.kuza.kuzasokoni.common.image.repository.ImagesRepository;
 import com.kuza.kuzasokoni.common.utils.EntityType;
+import com.kuza.kuzasokoni.domain.client.dtos.query.DocumentationView;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
 import com.kuza.kuzasokoni.domain.client.entities.Documentation;
 import com.kuza.kuzasokoni.domain.client.exceptions.ClientNotFoundException;
@@ -24,60 +25,62 @@ public class ClientDocumentationServiceImpl implements ClientDocumentationServic
     private final ClientRepository clientRepo;
     private final ImagesRepository imageRepo;
 
-
     @Override
-    public Documentation uploadDocumentation(Long clientId, MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
-        Client client = clientRepo.findById(clientId).orElseThrow(()->
+    public DocumentationView uploadDocumentation(Long clientId, MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
+        Client client = clientRepo.findById(clientId).orElseThrow(() ->
                 new ClientNotFoundException(clientId));
 
-        validateUploadInformation(baruaFile,kitambulishoFile,nidaNumber,kitambulishoType);
+        validateUploadInformation(baruaFile, kitambulishoFile, nidaNumber, kitambulishoType);
 
-        String baruaFileName = fileStorageService.store(baruaFile);
-        String kitambulishoFileName = fileStorageService.store(kitambulishoFile);
+        String baruaPath = fileStorageService.saveFile(baruaFile, "images");
+        String kitambulishoPath = fileStorageService.saveFile(kitambulishoFile, "images");
 
         Documentation documentation = Documentation.builder()
                 .nidaNumber(nidaNumber.trim())
                 .kitambulishoType(kitambulishoType.trim())
-                .kitambulishoFileName(kitambulishoFileName)
-                .baruaFileName(baruaFileName)
+                .kitambulishoFileName(kitambulishoPath)
+                .baruaFileName(baruaPath)
                 .client(client)
                 .build();
-        List<Images>  images =  new ArrayList<>();
-        images.add(Images.of(baruaFileName,baruaFileName, EntityType.SOKONI,client.getId()));
-        images.add(Images.of(kitambulishoFileName,kitambulishoFileName, EntityType.SOKONI,client.getId()));
+
+        List<Images> images = new ArrayList<>();
+        images.add(Images.of(baruaPath, baruaFile.getOriginalFilename(), EntityType.SOKONI, client.getId()));
+        images.add(Images.of(kitambulishoPath, kitambulishoFile.getOriginalFilename(), EntityType.SOKONI, client.getId()));
         imageRepo.saveAllAndFlush(images);
-        client.setDocumentation(documentation);
-        Client savedClient = clientRepository.save(client);
 
-        return savedClient.getDocumentation();
+        client.setDocumentation(documentation);
+        clientRepository.save(client);
+
+        return clientRepository.findDocumentationViewByClientId(clientId)
+                .orElseThrow(() -> new ClientNotFoundException(clientId));
     }
 
     @Override
-    public Documentation updateDocumentation(Long clientId, MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
-        Client client = clientRepo.findById(clientId).orElseThrow(()->
+    public DocumentationView updateDocumentation(Long clientId, MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
+        Client client = clientRepo.findById(clientId).orElseThrow(() ->
                 new ClientNotFoundException(clientId));
 
-        validateUploadInformation(baruaFile,kitambulishoFile,nidaNumber,kitambulishoType);
-        String baruaFileName = fileStorageService.store(baruaFile);
-        String kitambulishoFileName = fileStorageService.store(kitambulishoFile);
+        validateUploadInformation(baruaFile, kitambulishoFile, nidaNumber, kitambulishoType);
+
+        String baruaPath = fileStorageService.saveFile(baruaFile, "images");
+        String kitambulishoPath = fileStorageService.saveFile(kitambulishoFile, "images");
 
         Documentation documentation = Documentation.builder()
                 .nidaNumber(nidaNumber.trim())
                 .kitambulishoType(kitambulishoType.trim())
-                .kitambulishoFileName(kitambulishoFileName)
-                .baruaFileName(baruaFileName)
+                .kitambulishoFileName(kitambulishoPath)
+                .baruaFileName(baruaPath)
                 .client(client)
                 .build();
 
         client.setDocumentation(documentation);
-        Client savedClient = clientRepository.save(client);
+        clientRepository.save(client);
 
-        return savedClient.getDocumentation();
+        return clientRepository.findDocumentationViewByClientId(clientId)
+                .orElseThrow(() -> new ClientNotFoundException(clientId));
     }
 
-
-    private void validateUploadInformation(MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType){
-
+    private void validateUploadInformation(MultipartFile baruaFile, MultipartFile kitambulishoFile, String nidaNumber, String kitambulishoType) {
         if (baruaFile == null || baruaFile.isEmpty()) {
             throw new IllegalArgumentException("Barua file is required and must not be empty");
         }
@@ -95,3 +98,5 @@ public class ClientDocumentationServiceImpl implements ClientDocumentationServic
         }
     }
 }
+
+

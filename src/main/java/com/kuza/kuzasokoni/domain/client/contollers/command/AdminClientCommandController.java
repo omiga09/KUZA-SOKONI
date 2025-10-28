@@ -1,5 +1,7 @@
 package com.kuza.kuzasokoni.domain.client.contollers.command;
 
+import com.kuza.kuzasokoni.common.response.StandardResponse;
+import com.kuza.kuzasokoni.domain.client.dtos.query.ClientView;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
@@ -22,7 +24,9 @@ public class AdminClientCommandController {
     private final ClientCommandService clientCommandService;
 
     @PutMapping("/{id}/activate")
-    public ResponseEntity<Client> activateClient(@PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
+    public ResponseEntity<StandardResponse<ClientView>> activateClient(
+            @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
+
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
 
@@ -33,11 +37,19 @@ public class AdminClientCommandController {
         client.setStatus(ClientStatus.ACTIVATED);
         clientRepository.save(client);
 
-        return ResponseEntity.ok(client);
+        ClientView view = clientRepository.findClientViewById(id)
+                .orElseThrow(() -> new ClientNotFoundException(id));
+
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Client activated successfully", "/api/admin/clients/" + id + "/activate", view)
+        );
     }
 
+
     @PutMapping("/{id}/verify")
-    public ResponseEntity<Client> verifyClient(@PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
+    public ResponseEntity<StandardResponse<ClientView>> verifyClient(
+            @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
+
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new ClientNotFoundException(id));
 
@@ -48,12 +60,23 @@ public class AdminClientCommandController {
         client.setIsVerified(VerificationStatus.VERIFIED);
         clientRepository.save(client);
 
-        return ResponseEntity.ok(client);
+        ClientView view = clientRepository.findClientViewById(id)
+                .orElseThrow(() -> new ClientNotFoundException(id));
+
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Client verified successfully", "/api/admin/clients/" + id + "/verify", view)
+        );
     }
 
     @PutMapping("/{id}/submit")
-    public ResponseEntity<Client> submitClient(@PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
-        Client submitted = clientCommandService.submitClient(id);
-        return ResponseEntity.ok(submitted);
+    public ResponseEntity<StandardResponse<ClientView>> submitClient(
+            @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
+
+        ClientView submitted = clientCommandService.submitClient(id);
+
+        return ResponseEntity.ok(
+                StandardResponse.success(200, "Client submitted successfully", "/api/admin/clients/" + id + "/submit", submitted)
+        );
     }
+
 }
