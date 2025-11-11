@@ -1,7 +1,7 @@
 package com.kuza.kuzasokoni.domain.client.dtos.command;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.entities.Guarantor;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
@@ -47,6 +47,9 @@ public class ClientCreateCommand {
 
     @NotBlank(message = "Address is required")
     private String address;
+
+    @NotNull(message = "EntityType is required")
+    private List<EntityType> entityTypes;
 
     @Valid
     @Size(min = 1, message = "At least one guarantor is required")

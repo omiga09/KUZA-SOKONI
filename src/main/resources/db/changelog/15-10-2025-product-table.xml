@@ -1,28 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="create-product-table" author="kuza">
+    <changeSet id="create-products-table-v2" author="kuza">
         <createTable tableName="products">
             <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="product_name" type="VARCHAR(255)"/>
-            <column name="short_name" type="VARCHAR(100)"/>
+
+            <column name="product_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="short_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="minimum_principal" type="DECIMAL(19,2)"/>
             <column name="maximum_principal" type="DECIMAL(19,2)"/>
-            <column name="interest" type="DECIMAL(5,2)"/>
+
             <column name="interest_method" type="VARCHAR(50)"/>
-            <column name="tenure_plan" type="VARCHAR(100)"/>
-            <column name="repaid_every" type="VARCHAR(20)"/>
-            <column name="repaid_frequency" type="INT"/>
-            <column name="grace_period_days" type="INT"/>
-            <column name="currency" type="VARCHAR(10)"/>
+            <column name="repaid_every" type="VARCHAR(50)"/>
+            <column name="currency" type="VARCHAR(20)"/>
             <column name="status" type="VARCHAR(20)"/>
-            <column name="collateral_percentage" type="DECIMAL(5,2)"/>
-            <column name="repayment_strategy_id" type="BIGINT"/>
+            <column name="collateral_percentage" type="DECIMAL(19,2)"/>
+            <column name="interest_min" type="DECIMAL(19,2)"/>
+            <column name="interest_max" type="DECIMAL(19,2)"/>
+
+            <column name="repayment_strategy_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_product_repayment_strategy"
+                             referencedTableName="repayment_strategies" referencedColumnNames="id"/>
+            </column>
+
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>

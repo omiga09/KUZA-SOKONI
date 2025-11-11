@@ -3,6 +3,7 @@ package com.kuza.kuzasokoni.domain.loan.repositories;
 import com.kuza.kuzasokoni.domain.loan.dtos.query.RepaymentScheduleView;
 import com.kuza.kuzasokoni.domain.loan.entities.RepaymentSchedule;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -61,5 +62,9 @@ public interface RepaymentScheduleRepository extends JpaRepository<RepaymentSche
 
     @Query("SELECT r FROM RepaymentSchedule r WHERE r.status = 'PENDING' AND r.expectedDate < :today")
     List<RepaymentSchedule> findAllPendingAndOverdue(@Param("today") LocalDate today);
+
+    @Modifying
+    @Query("DELETE FROM RepaymentSchedule r WHERE r.loan.id = :loanId")
+    void deleteAllByLoanId(@Param("loanId") Long loanId);
 
 }

@@ -16,4 +16,6 @@
     <include file="db/changelog/15-10-2025-images-table.xml"/>
     <include file="db/changelog/15-10-2025-client-guarantors.xml"/>
     <include file="db/changelog/15-10-2025-client-documentation-table.xml"/>
+    <include file="db/changelog/15-10-2025-LoanRestructureHistory.xml"/>
+    <include file="db/changelog/15-10-2025-tenures-table.xml"/>
 </databaseChangeLog>

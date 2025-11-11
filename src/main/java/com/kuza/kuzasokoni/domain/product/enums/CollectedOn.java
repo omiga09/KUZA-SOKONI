@@ -1,7 +1,8 @@
 package com.kuza.kuzasokoni.domain.product.enums;
 
 public enum CollectedOn {
-    DISBURSEMENT_PENALTY,
+    INSTALLMENT,
+    DISBURSEMENT,
     RESTRUCTURING,
     WRITE_OFF,
     FORE_CLOSURE,

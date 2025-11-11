@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.domain.product.dtos.query;
 
+import com.kuza.kuzasokoni.domain.product.enums.ChargeDeductionOn;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
 
@@ -11,4 +12,5 @@ public interface ChargesConfigView {
     BigDecimal getAmount();
     RepaymentType getRepaymentType();
     CollectedOn getCollectedOn();
+    //ChargeDeductionOn getChargeDeductionOn();
 }

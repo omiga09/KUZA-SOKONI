@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.product.dtos.command;
 
 
+import com.kuza.kuzasokoni.domain.product.enums.ChargeDeductionOn;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
 import lombok.AllArgsConstructor;
@@ -24,5 +25,7 @@ public class ChargeCreateCommand {
         private Long productId;
         private Long loanId;
         private LocalDate dueDate;
-    }
+        private ChargeDeductionOn deductedOn;
+
+}
 

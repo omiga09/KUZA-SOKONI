@@ -11,4 +11,5 @@ public interface LoanCommandService {
     Loan restructureLoan(LoanRestructureCommand cmd);
     Loan closeLoan(LoanCloseCommand cmd);
     void deleteLoan(Long loanId);
+
 }

@@ -40,19 +40,11 @@ public class Product extends Auditable {
 
     private BigDecimal maximumPrincipal;
 
-    private BigDecimal interest;
-
     @Enumerated(EnumType.STRING)
     private InterestMethod interestMethod;
 
-    private String tenurePlan;
-
     @Enumerated(EnumType.STRING)
     private RepaymentFrequency repaidEvery;
-
-    private Integer repaidFrequency;
-
-    private Integer gracePeriodDays;
 
     @Enumerated(EnumType.STRING)
     private Currency currency;
@@ -62,6 +54,10 @@ public class Product extends Auditable {
 
     private BigDecimal collateralPercentage;
 
+    private BigDecimal interestMin;
+
+    private BigDecimal interestMax;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Charge> charges;
 
@@ -69,8 +65,7 @@ public class Product extends Auditable {
     @JoinColumn(name = "repayment_strategy_id", nullable = false)
     private RepaymentStrategy repaymentStrategy;
 
-
-
-
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tenure> tenures;
 
 }

@@ -52,4 +52,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="add-deducted-on-to-charges" author="kuza">
+        <addColumn tableName="charges">
+            <column name="deducted_on" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

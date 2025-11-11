@@ -2,6 +2,7 @@ package com.kuza.kuzasokoni.domain.loan.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
@@ -13,6 +14,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,6 +22,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "loans", indexes = {
         @Index(name = "idx_loan_status", columnList = "status"),
@@ -53,8 +56,8 @@ public class Loan extends Auditable {
     private BigDecimal annualInterestRate;
     private Integer numberOfInstallments;
 
-    @Enumerated(EnumType.STRING)
-    private Tenure tenure;
+    //  @Enumerated(EnumType.STRING)
+     //private Tenure tenure;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
@@ -69,13 +72,14 @@ public class Loan extends Auditable {
     @Enumerated(EnumType.STRING)
     private LoanRestructured isLoanRestructured;
 
-    @Column(name = "restructure_plan_id")
-    private Long restructurePlanId;
+     @Column(name = "restructure_plan_id")
+     private Long restructurePlanId;
 
-    private String collateral;
-    private BigDecimal collateralAmount;
+     private String collateral;
+     private BigDecimal collateralAmount;
 
-    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<RepaymentSchedule> repaymentSchedules;
+    private List<RepaymentSchedule> repaymentSchedules = new ArrayList<>();
+
 }

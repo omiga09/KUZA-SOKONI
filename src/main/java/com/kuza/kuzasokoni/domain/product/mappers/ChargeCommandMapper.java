@@ -6,6 +6,6 @@ import com.kuza.kuzasokoni.domain.product.entities.ChargesConfig;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 
 public interface ChargeCommandMapper {
-    Charge toEntity(ChargeCreateCommand cmd);
+    Charge toEntity(ChargeCreateCommand cmd, Product savedProduct);
     Charge toEntityFromConfig(ChargesConfig cmd, Product p);
 }

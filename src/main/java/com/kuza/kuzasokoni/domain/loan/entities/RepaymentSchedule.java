@@ -1,6 +1,7 @@
 package com.kuza.kuzasokoni.domain.loan.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kuza.kuzasokoni.common.audit.Auditable;
 import com.kuza.kuzasokoni.domain.loan.enums.ScheduleStatus;
 import jakarta.persistence.*;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "repayment_schedule", indexes = {
         @Index(name = "idx_schedule_expected_date", columnList = "expectedDate"),
         @Index(name = "idx_schedule_paid_date", columnList = "paidDate"),

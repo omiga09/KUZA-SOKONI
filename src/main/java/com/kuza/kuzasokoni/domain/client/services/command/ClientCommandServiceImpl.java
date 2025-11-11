@@ -40,6 +40,7 @@ public class ClientCommandServiceImpl implements ClientCommandService {
         Client client = mapper.toEntity(cmd);
         client.setStatus(ClientStatus.PENDING);
         client.setIsVerified(VerificationStatus.UNVERIFIED);
+        client.setEntityTypes(cmd.getEntityTypes());
 
         clientRepository.save(client);
 
@@ -66,8 +67,13 @@ public class ClientCommandServiceImpl implements ClientCommandService {
         cmd.setAddress(cmd.getAddress().trim());
 
         mapper.updateEntity(cmd, client);
-        client.setUpdatedAt(LocalDateTime.now());
 
+
+        if (cmd.getEntityTypes() != null && !cmd.getEntityTypes().isEmpty()) {
+            client.setEntityTypes(cmd.getEntityTypes());
+        }
+
+        client.setUpdatedAt(LocalDateTime.now());
         clientRepository.save(client);
 
         return clientRepository.findClientViewById(client.getId())

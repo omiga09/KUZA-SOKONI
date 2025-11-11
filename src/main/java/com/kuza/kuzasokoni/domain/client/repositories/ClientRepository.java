@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
+
     @Query("""
 SELECT c.id AS id,
        c.firstName AS firstName,
@@ -27,7 +28,8 @@ SELECT c.id AS id,
        c.isVerified AS isVerified,
        c.createdAt AS createdAt,
        c.updatedAt AS updatedAt,
-       c.submittedAt AS submittedAt
+       c.submittedAt AS submittedAt,
+       c.entityTypes AS entityTypes
 FROM Client c
 """)
     List<ClientView> findAllClientViews();
@@ -46,7 +48,8 @@ SELECT c.id AS id,
        c.isVerified AS isVerified,
        c.createdAt AS createdAt,
        c.updatedAt AS updatedAt,
-       c.submittedAt AS submittedAt
+       c.submittedAt AS submittedAt,
+       c.entityTypes AS entityTypes
 FROM Client c
 WHERE c.id = :id
 """)
@@ -77,5 +80,11 @@ WHERE c.id = :clientId
 """)
     Optional<ClientGuarantorView> findClientGuarantors(@Param("clientId") Long clientId);
 
+   // @Query("""
+    //SELECT c FROM Client c
+    //LEFT JOIN FETCH c.entityTypes
+    //WHERE c.id = :id
+   // """)
+    //Optional<Client> findClientWithEntityTypesById(@Param("id") Long id);
 
 }

@@ -1,11 +1,8 @@
 package com.kuza.kuzasokoni.domain.client.dtos.command;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.kuza.kuzasokoni.domain.client.entities.Documentation;
+import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.entities.Guarantor;
-import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
-import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -52,9 +49,7 @@ public class ClientUpdateCommand {
     @NotBlank(message = "Address is required")
     private String address;
 
-    private DocumentationCreateCommand documentation;
-
-
     private List<Guarantor> guarantors;
 
+    private List<EntityType> entityTypes;
 }

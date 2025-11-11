@@ -24,10 +24,8 @@ public class LoanCommandMapperImpl implements LoanCommandMapper {
     @Override
     public Loan toInitiatedLoan(LoanInitiateCommand cmd) {
         Loan loan = new Loan();
-        loan.setStatus(LoanStatus.INITIATED);
+        loan.setStatus(LoanStatus.PENDING);
         loan.setPrincipal(cmd.getPrincipal());
-        loan.setTenure(cmd.getTenure());
-        loan.setGracePeriodDays(cmd.getGracePeriodDays());
         loan.setCollateral(cmd.getCollateral());
         loan.setCollateralAmount(cmd.getCollateralAmount());
         loan.setAnnualInterestRate(cmd.getAnnualInterestRate());

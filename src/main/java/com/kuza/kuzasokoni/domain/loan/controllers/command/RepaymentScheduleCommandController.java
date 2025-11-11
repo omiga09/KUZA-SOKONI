@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.domain.loan.controllers.command;
 
+import com.kuza.kuzasokoni.domain.loan.dtos.command.UpdateRepaymentScheduleCommand;
 import com.kuza.kuzasokoni.domain.loan.entities.Loan;
 import com.kuza.kuzasokoni.domain.loan.entities.RepaymentSchedule;
 import com.kuza.kuzasokoni.domain.loan.repositories.LoanRepository;
@@ -17,7 +18,7 @@ import java.util.List;
 public class RepaymentScheduleCommandController {
 
     private final LoanRepository loanRepository;
-    private final RepaymentScheduleGenerationService scheduleService;
+    private final RepaymentScheduleGenerationService repaymentScheduleService;
 
     @PostMapping("/{loanId}/generate-schedule")
     public ResponseEntity<List<RepaymentSchedule>> generateSchedule(
@@ -28,8 +29,16 @@ public class RepaymentScheduleCommandController {
                 .orElseThrow(() -> new RuntimeException("Loan not found"));
 
         LocalDate effectiveStartDate = startDate != null ? startDate : loan.getDisbursedDate();
-        List<RepaymentSchedule> schedules = scheduleService.generateSchedule(loan, effectiveStartDate);
+
+        // tumia effectiveStartDate badala ya repaymentStartDate
+        List<RepaymentSchedule> schedules = repaymentScheduleService.generateSchedule(loan, effectiveStartDate);
 
         return ResponseEntity.ok(schedules);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Void> updateSchedule(@RequestBody UpdateRepaymentScheduleCommand cmd) {
+        repaymentScheduleService.updateRepaymentSchedule(cmd);
+        return ResponseEntity.ok().build();
     }
 }

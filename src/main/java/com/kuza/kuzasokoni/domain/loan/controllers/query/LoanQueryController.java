@@ -31,7 +31,8 @@ public class LoanQueryController {
 
     @GetMapping("/{loanId}")
         public LoanRepaymentView getLoanById(@PathVariable Long loanId) {
-            return loanQueryService.getLoanById(loanId);
+
+        return loanQueryService.getLoanById(loanId);
         }
     }
 

@@ -4,48 +4,50 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create-loan-table" author="kuza">
-        <createTable tableName="loans">
+    <changeSet id="create-repayment-schedule-table" author="kuza">
+        <createTable tableName="repayment_schedule">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(50)"/>
-            <column name="disbursed_date" type="DATE"/>
-            <column name="approval_date" type="DATE"/>
-            <column name="closed_date" type="DATE"/>
-            <column name="grace_period_days" type="INT"/>
-            <column name="penalty_amount" type="DECIMAL(19,2)"/>
-            <column name="principal" type="DECIMAL(19,2)"/>
-            <column name="outstanding" type="DECIMAL(19,2)"/>
-            <column name="fees" type="DECIMAL(19,2)"/>
-            <column name="charges" type="DECIMAL(19,2)"/>
+            <column name="loan_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="installment_number" type="INT"/>
+            <column name="days" type="INT"/>
+            <column name="expected_date" type="DATE"/>
+            <column name="paid_date" type="DATE"/>
+            <column name="principal_due" type="DECIMAL(19,2)"/>
             <column name="interest" type="DECIMAL(19,2)"/>
-            <column name="interest_method" type="VARCHAR(50)"/>
-            <column name="annual_interest_rate" type="DECIMAL(5,2)"/>
-            <column name="number_of_installments" type="INT"/>
-            <column name="tenure" type="VARCHAR(20)"/>
-            <column name="client_id" type="BIGINT"/>
-            <column name="product_id" type="BIGINT"/>
-            <column name="is_loan_restructured" type="VARCHAR(10)"/>
-            <column name="restructure_plan_id" type="BIGINT"/>
-            <column name="collateral" type="VARCHAR(255)"/>
-            <column name="collateral_amount" type="DECIMAL(19,2)"/>
+            <column name="fees" type="DECIMAL(19,2)"/>
+            <column name="penalty" type="DECIMAL(19,2)"/>
+            <column name="remaining_balance" type="DECIMAL(19,2)"/>
+            <column name="outstanding" type="DECIMAL(19,2)"/>
+            <column name="late_by" type="INT"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="total_due" type="DECIMAL(19,2)"/>
+            <column name="total_paid" type="DECIMAL(19,2)"/>
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>
         </createTable>
 
-        <createIndex tableName="loans" indexName="idx_loan_status">
-            <column name="status"/>
+        <createIndex tableName="repayment_schedule" indexName="idx_schedule_expected_date">
+            <column name="expected_date"/>
         </createIndex>
 
-        <createIndex tableName="loans" indexName="idx_loan_client">
-            <column name="client_id"/>
+        <createIndex tableName="repayment_schedule" indexName="idx_schedule_paid_date">
+            <column name="paid_date"/>
         </createIndex>
 
-        <createIndex tableName="loans" indexName="idx_loan_product">
-            <column name="product_id"/>
+        <createIndex tableName="repayment_schedule" indexName="idx_schedule_installment_number">
+            <column name="installment_number"/>
         </createIndex>
+
+        <addForeignKeyConstraint baseTableName="repayment_schedule"
+                                 baseColumnNames="loan_id"
+                                 referencedTableName="loans"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_repayment_schedule_loan"/>
     </changeSet>
 
 </databaseChangeLog>

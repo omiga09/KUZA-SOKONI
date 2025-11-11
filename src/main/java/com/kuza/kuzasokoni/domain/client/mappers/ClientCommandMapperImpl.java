@@ -2,9 +2,7 @@ package com.kuza.kuzasokoni.domain.client.mappers;
 
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientCreateCommand;
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientUpdateCommand;
-import com.kuza.kuzasokoni.domain.client.dtos.command.DocumentationCreateCommand;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
-import com.kuza.kuzasokoni.domain.client.entities.Documentation;
 import com.kuza.kuzasokoni.domain.client.entities.Guarantor;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
@@ -31,6 +29,8 @@ public class ClientCommandMapperImpl implements ClientCommandMapper {
         client.setDateOfBirth(cmd.getDateOfBirth());
         client.setGender(cmd.getGender());
         client.setAddress(cmd.getAddress());
+        client.setEntityTypes(cmd.getEntityTypes());
+
 
         if (cmd.getGuarantors() != null && !cmd.getGuarantors().isEmpty()) {
             List<Guarantor> mappedGuarantors = cmd.getGuarantors().stream()
