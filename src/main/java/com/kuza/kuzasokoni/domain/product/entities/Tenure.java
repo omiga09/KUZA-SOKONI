@@ -20,28 +20,41 @@ public class Tenure extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Penalty groups (percentages)
-    private BigDecimal penaltyGroupOne;
-    private BigDecimal penaltyGroupTwo;
-    private BigDecimal penaltyGroupThree;
-    private BigDecimal penaltyGroupFour;
-
-    // Phase days (integers)
+    @Column(name = "phase1_days")
     private Integer phase1Days;
+
+    @Column(name = "phase2_days")
     private Integer phase2Days;
+
+    @Column(name = "phase3_days")
     private Integer phase3Days;
+
+    @Column(name = "phase4_days")
     private Integer phase4Days;
 
-    // Penalty cap (integer)
-    private Integer penaltyCap;
+    @Column(name = "penalty_group_one")
+    private BigDecimal penaltyGroupOne;
 
-    // Grace period (integer)
+    @Column(name = "penalty_group_two")
+    private BigDecimal penaltyGroupTwo;
+
+    @Column(name = "penalty_group_three")
+    private BigDecimal penaltyGroupThree;
+
+    @Column(name = "penalty_group_four")
+    private BigDecimal penaltyGroupFour;
+
+    @Column(name = "penalty_cap")
+    private Double penaltyCap;
+
+    @Column(name = "grace_period_days")
     private Integer gracePeriodDays;
 
-    private BigDecimal interest;
-
-    // Number of days for this tenure
+    @Column(name = "number_of_days")
     private Integer numberOfDays;
+
+    @Column(name="interest")
+    private BigDecimal interest;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)

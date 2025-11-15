@@ -56,8 +56,6 @@ public class Loan extends Auditable {
     private BigDecimal annualInterestRate;
     private Integer numberOfInstallments;
 
-    //  @Enumerated(EnumType.STRING)
-     //private Tenure tenure;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")

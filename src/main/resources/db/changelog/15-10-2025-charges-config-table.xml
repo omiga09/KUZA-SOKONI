@@ -4,7 +4,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <!-- Create charges_config table if not exists -->
     <changeSet id="create-charges-config-table" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="charges_config"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="charges_config">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
@@ -24,7 +31,14 @@
         </createIndex>
     </changeSet>
 
+    <!-- Add deducted_on column ONLY if not exists -->
     <changeSet id="add-deducted-on-to-charges-config" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="charges_config" columnName="deducted_on"/>
+            </not>
+        </preConditions>
+
         <addColumn tableName="charges_config">
             <column name="deducted_on" type="VARCHAR(50)">
                 <constraints nullable="true"/>

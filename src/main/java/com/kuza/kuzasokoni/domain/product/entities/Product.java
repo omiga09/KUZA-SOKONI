@@ -12,7 +12,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,46 +28,64 @@ import java.util.List;
 })
 public class Product extends Auditable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @NotBlank(message = "product name is required")
-    private String productName;
+        @NotBlank(message = "product name is required")
+        private String productName;
 
-    @NotBlank(message = "short name is required")
-    private String shortName;
+        private String shortName;
 
-    private BigDecimal minimumPrincipal;
+        private BigDecimal minimumPrincipal;
+        private BigDecimal maximumPrincipal;
 
-    private BigDecimal maximumPrincipal;
+        @Enumerated(EnumType.STRING)
+        private InterestMethod interestMethod;
 
-    @Enumerated(EnumType.STRING)
-    private InterestMethod interestMethod;
+        @Enumerated(EnumType.STRING)
+        private RepaymentFrequency repaidEvery;
 
-    @Enumerated(EnumType.STRING)
-    private RepaymentFrequency repaidEvery;
+        @Enumerated(EnumType.STRING)
+        private Currency currency;
 
-    @Enumerated(EnumType.STRING)
-    private Currency currency;
+        @Enumerated(EnumType.STRING)
+        private ProductStatus status;
 
-    @Enumerated(EnumType.STRING)
-    private ProductStatus status;
+        private BigDecimal collateralPercentage;
+        private BigDecimal interestMin;
+        private BigDecimal interestMax;
 
-    private BigDecimal collateralPercentage;
+        private Integer overdue_days;
+        private Integer npa_days;
 
-    private BigDecimal interestMin;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "repayment_strategy_id", nullable = false)
+        private RepaymentStrategy repaymentStrategy;
 
-    private BigDecimal interestMax;
+       @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+       private Set<Charge> charges = new HashSet<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Charge> charges;
+       @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+       private Set<Tenure> tenures = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "repayment_strategy_id", nullable = false)
-    private RepaymentStrategy repaymentStrategy;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tenure> tenures;
+    @PrePersist
+        @PreUpdate
+        private void ensureShortName() {
+            if (this.shortName == null || this.shortName.isBlank()) {
+                this.shortName = generateShortName(this.productName);
+            }
+        }
+        private String generateShortName(String name) {
+            if (name == null || name.isBlank()) return null;
 
-}
+
+            StringBuilder sb = new StringBuilder();
+            for (String part : name.split("\\s+")) {
+                sb.append(part.charAt(0));
+            }
+            return sb.toString().toUpperCase();
+        }
+    }
+

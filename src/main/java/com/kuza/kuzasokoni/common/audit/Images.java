@@ -17,17 +17,15 @@ public class Images extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private  String path;
 
-
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "entity_type")
     private EntityType entityType;
-
 
     @Column(nullable = false)
     private Long clientId;

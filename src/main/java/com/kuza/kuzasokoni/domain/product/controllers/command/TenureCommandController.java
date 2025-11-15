@@ -7,7 +7,7 @@ import com.kuza.kuzasokoni.domain.product.services.command.TenureCommandService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/tenures/command")
+@RequestMapping("/api/tenures")
 public class TenureCommandController {
     private final TenureCommandService tenureCommandService;
 

@@ -28,6 +28,9 @@ public class ProductCreateCommand {
     private RepaymentFrequency repaidEvery;
     private Currency currency;
     private ProductStatus status;
+    private Integer overdue_days;
+    private Integer npa_days;
+
 
     private BigDecimal collateralPercentage;
     private BigDecimal interestMin;

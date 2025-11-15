@@ -6,8 +6,14 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="create-client-guarantors-table" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client_guarantors"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="client_guarantors">
-            <column name="client_id" type="BIGINT">
+            <column name="client_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">

@@ -6,15 +6,21 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <changeSet id="create-documentation-table" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="documentation"/>
+            </not>
+        </preConditions>
         <createTable tableName="documentation">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="nida_number" type="VARCHAR(100)"/>
             <column name="kitambulisho_type" type="VARCHAR(100)"/>
             <column name="kitambulisho_file_name" type="VARCHAR(255)"/>
             <column name="barua_file_name" type="VARCHAR(255)"/>
-            <column name="client_id" type="BIGINT">
+            <column name="client_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false" foreignKeyName="fk_documentation_client" references="clients(id)"/>
             </column>
         </createTable>

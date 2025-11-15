@@ -16,9 +16,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("""
     SELECT p.id AS id,
            p.productName AS productName,
-           p.interest AS interest,
+           p.shortName AS shortName,
+           p.interestMin AS interestMin,
+           p.interestMax AS interestMax,
            p.interestMethod AS interestMethod,
-           p.tenurePlan AS tenurePlan,
            p.repaidEvery AS repaidEvery,
            p.currency AS currency,
            p.status AS status
@@ -29,9 +30,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("""
     SELECT p.id AS id,
            p.productName AS productName,
-           p.interest AS interest,
+           p.shortName AS shortName,
+           p.interestMin AS interestMin,
+           p.interestMax AS interestMax,
            p.interestMethod AS interestMethod,
-           p.tenurePlan AS tenurePlan,
            p.repaidEvery AS repaidEvery,
            p.currency AS currency,
            p.status AS status
@@ -42,5 +44,16 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT i FROM Images i WHERE i.id = :id")
     Optional<ImageView> findProjectedById(Long id);
+
+    @Query("SELECT p FROM Product p " +
+            "LEFT JOIN FETCH p.charges " +
+            "LEFT JOIN FETCH p.tenures " +
+            "WHERE p.id = :id")
+    Product findProductWithDetails(@Param("id") Long id);
+
+    @Query("SELECT DISTINCT p FROM Product p " +
+            "LEFT JOIN FETCH p.charges " +
+            "LEFT JOIN FETCH p.tenures")
+    List<Product> findAllProductsWithDetails();
 
 }

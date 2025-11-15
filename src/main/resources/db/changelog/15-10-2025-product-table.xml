@@ -6,8 +6,13 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="create-products-table-v2" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="products"/>
+            </not>
+        </preConditions>
         <createTable tableName="products">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
@@ -29,7 +34,12 @@
             <column name="collateral_percentage" type="DECIMAL(19,2)"/>
             <column name="interest_min" type="DECIMAL(19,2)"/>
             <column name="interest_max" type="DECIMAL(19,2)"/>
-
+            <column name="overdue_days" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="npa_days" type="INT">
+                <constraints nullable="true"/>
+            </column>
             <column name="repayment_strategy_id" type="BIGINT">
                 <constraints nullable="false" foreignKeyName="fk_product_repayment_strategy"
                              referencedTableName="repayment_strategies" referencedColumnNames="id"/>

@@ -1,12 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
+    <!-- Clients table -->
     <changeSet id="create-client-table" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="clients"/>
+            </not>
+        </preConditions>
         <createTable tableName="clients">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(100)"/>
@@ -34,9 +41,16 @@
             <column name="is_verified"/>
         </createIndex>
     </changeSet>
+
+    <!-- Client entity types -->
     <changeSet id="create-client-entity-types" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client_entity_types"/>
+            </not>
+        </preConditions>
         <createTable tableName="client_entity_types">
-            <column name="client_id" type="BIGINT">
+            <column name="client_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false"/>
             </column>
             <column name="entity_type" type="VARCHAR(50)">
@@ -52,9 +66,15 @@
                 constraintName="fk_entity_type_client"/>
     </changeSet>
 
+    <!-- Client guarantors -->
     <changeSet id="create-client-guarantors" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="client_guarantors"/>
+            </not>
+        </preConditions>
         <createTable tableName="client_guarantors">
-            <column name="client_id" type="BIGINT">
+            <column name="client_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(255)">

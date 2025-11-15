@@ -9,20 +9,14 @@ public interface TenureView {
         BigDecimal getPenaltyGroupTwo();
         BigDecimal getPenaltyGroupThree();
         BigDecimal getPenaltyGroupFour();
-
         Integer getPhase1Days();
         Integer getPhase2Days();
         Integer getPhase3Days();
         Integer getPhase4Days();
-
         Integer getPenaltyCap();
         Integer getGracePeriodDays();
-
-        BigDecimal getInterestMin();
-        BigDecimal getInterestMax();
-
+        BigDecimal getInterest();
         Integer getNumberOfDays();
-
         Long getProductId();
     }
 

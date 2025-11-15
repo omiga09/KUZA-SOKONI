@@ -7,17 +7,21 @@
 
     <changeSet id="create-repayment-schedule-table-v2" author="kuza">
 
-        <!-- Ensure the 'loans' table exists first -->
+        <!-- Ensure the 'loans' table exists first and repayment_schedule does NOT exist -->
         <preConditions onFail="MARK_RAN">
             <tableExists tableName="loans"/>
+            <not>
+                <tableExists tableName="repayment_schedule"/>
+            </not>
         </preConditions>
 
+        <!-- Create repayment_schedule table -->
         <createTable tableName="repayment_schedule">
             <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="loan_id" type="BIGINT">
+            <column name="loan_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false"/>
             </column>
 

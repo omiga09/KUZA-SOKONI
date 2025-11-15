@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,10 +23,12 @@ import java.math.BigDecimal;
         private String shortName;
         private BigDecimal minimumPrincipal;
         private BigDecimal maximumPrincipal;
-        private BigDecimal interest;
         private InterestMethod interestMethod;
         private String tenurePlan;
         private RepaymentFrequency repaidEvery;
+        private Integer overdue_days;
+        private Integer npa_days;
+
         private Integer repaidFrequency;
         private BigDecimal penaltyPercentage;
         private BigDecimal chargesPercentage;
@@ -35,4 +38,9 @@ import java.math.BigDecimal;
         private ProductStatus status;
         private BigDecimal collateralPercentage;
         private Long repaymentStrategyId;
+        private BigDecimal InterestMin;
+        private BigDecimal InterestMax;
+        private List<ChargeCreateCommand> charges;
+        private List<TenureCreateCommand> tenures;
+
 }

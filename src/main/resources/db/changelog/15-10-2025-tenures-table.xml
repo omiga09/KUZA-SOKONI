@@ -6,8 +6,13 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="create-tenure-table" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="tenures"/>
+            </not>
+        </preConditions>
         <createTable tableName="tenures">
-            <column name="id" type="BIGINT" autoIncrement="true">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
@@ -21,14 +26,14 @@
             <column name="phase3_days" type="INT"/>
             <column name="phase4_days" type="INT"/>
 
-            <column name="penalty_cap" type="INT"/>
+            <column name="penalty_cap" type="DOUBLE"/>
             <column name="grace_period_days" type="INT"/>
 
             <column name="interest" type="DECIMAL(19,2)"/>
 
             <column name="number_of_days" type="INT"/>
 
-            <column name="product_id" type="BIGINT">
+            <column name="product_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false" foreignKeyName="fk_tenure_product"
                              referencedTableName="products" referencedColumnNames="id"/>
             </column>

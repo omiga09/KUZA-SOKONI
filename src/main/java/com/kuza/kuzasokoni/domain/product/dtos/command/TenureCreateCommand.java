@@ -23,7 +23,7 @@ public class TenureCreateCommand {
         private Integer phase3Days;
         private Integer phase4Days;
 
-        private Integer penaltyCap;
+        private Double penaltyCap;
         private Integer gracePeriodDays;
 
          private BigDecimal interest;

@@ -1,0 +1,88 @@
+spring:
+  application:
+    name: KUZA-SOKONI
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/kuza_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: omar
+    password: omar@3000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        format_sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
+    clear-checksums: true
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# App Config
+app:
+  upload-dir: uploads
+  jwt:
+    secret: ${JWT_SECRET:your-very-secure-jwt-secret-key-256-bits-long}
+    expiration-ms: 86400000
+
+  otp:
+    expiry-minutes: 3
+    max-attempts: 3
+    resend-cooldown-seconds: 60
+
+  sms:
+    url: https://bulksms.fasthub.co.tz/api/sms/send
+    clientId: "54637ab2-1ab8-4bf7-b6e8-ec8969b6decd"
+    clientSecret: "e3e568c6-5103-4447-b830-62ac747d470b"
+    source: KUZACAPITAL
+    enabled: true
+
+# Server
+server:
+  port: 8082
+  servlet:
+    context-path: /api
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Logging
+logging:
+  level:
+    com.kuza.kuzasokoni: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# CORS
+cors:
+  allowed-origins:
+    - http://localhost:3000
+    - http://localhost:3001
+    - https://kuza-sokoni.com
+    - https://admin.kuza-sokoni.com
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: "*"
+  allow-credentials: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+debug: false

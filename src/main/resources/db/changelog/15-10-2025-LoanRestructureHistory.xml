@@ -5,12 +5,18 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="create-loan-restructure-history" author="developer">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="loan_restructure_history"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="loan_restructure_history">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
-            <column name="loan_id" type="BIGINT">
+            <column name="loan_id" type="BIGINT UNSIGNED">
                 <constraints nullable="false"/>
             </column>
 

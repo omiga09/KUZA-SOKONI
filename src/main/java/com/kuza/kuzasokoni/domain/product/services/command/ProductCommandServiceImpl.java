@@ -81,13 +81,37 @@ public class ProductCommandServiceImpl implements ProductCommandService {
 
 
     @Override
+    @Transactional
     public ProductView updateProduct(ProductUpdateCommand cmd) {
         Product product = productRepository.findById(cmd.getId())
                 .orElseThrow(() -> new ProductNotFoundException(cmd.getId()));
+
+        // Update basic product fields
         mapper.updateEntity(cmd, product);
+
+        // ✅ Handle Tenures update
+        if (cmd.getTenures() != null) {
+            product.getTenures().clear();
+            cmd.getTenures().forEach(t -> {
+                Tenure tenure = tenureMapper.toEntity(t, product);
+                product.getTenures().add(tenure);
+            });
+        }
+
+        // ✅ Handle Charges update
+        if (cmd.getCharges() != null) {
+            product.getCharges().clear();
+            cmd.getCharges().forEach(c -> {
+                Charge charge = cMapper.toEntity(c, product);
+                product.getCharges().add(charge);
+            });
+        }
+
         Product updated = productRepository.save(product);
+
         return productQueryService.getProductById(updated.getId());
     }
+
 
     @Override
     public void deleteProduct(Long id) {

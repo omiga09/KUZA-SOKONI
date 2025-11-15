@@ -2,6 +2,7 @@ package com.kuza.kuzasokoni.domain.product.mappers;
 
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ProductUpdateCommand;
+import com.kuza.kuzasokoni.domain.product.dtos.query.ProductView;
 import com.kuza.kuzasokoni.domain.product.entities.Charge;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 

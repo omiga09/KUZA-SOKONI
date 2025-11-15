@@ -4,7 +4,9 @@ import com.kuza.kuzasokoni.domain.product.dtos.command.TenureCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.TenureUpdateCommand;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 import com.kuza.kuzasokoni.domain.product.entities.Tenure;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TenureCommandMapperImpl implements TenureCommandMapper{
 
     @Override

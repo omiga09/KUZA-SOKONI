@@ -4,17 +4,29 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create-repayment-strategy-table" author="kuza">
+    <changeSet id="create-repayment-strategy-table" author="kuza" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="repayment_strategies"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="repayment_strategies">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="include_principal" type="BOOLEAN"/>
-            <column name="include_interest" type="BOOLEAN"/>
-            <column name="include_penalty" type="BOOLEAN"/>
-            <column name="include_fees" type="BOOLEAN"/>
-            <column name="include_charges" type="BOOLEAN"/>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="principal" type="INT"/>
+            <column name="interest" type="INT"/>
+            <column name="penalty" type="INT"/>
+            <column name="fees" type="INT"/>
+            <column name="charges" type="INT"/>
+
+
             <column name="created_at" type="DATETIME"/>
             <column name="updated_at" type="DATETIME"/>
             <column name="submitted_at" type="DATETIME"/>

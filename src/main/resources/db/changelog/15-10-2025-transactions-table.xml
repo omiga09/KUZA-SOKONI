@@ -5,6 +5,11 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="create-transactions-table" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transactions"/>
+            </not>
+        </preConditions>
         <createTable tableName="transactions">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true"/>
