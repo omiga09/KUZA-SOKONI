@@ -17,6 +17,7 @@ public class KuzaSokoniApplication {
 
     @Bean
     public WebClient webClient() {
+
         return WebClient.builder().build();
     }
 

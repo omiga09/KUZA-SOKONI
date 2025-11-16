@@ -11,6 +11,7 @@
                 <tableExists tableName="tenures"/>
             </not>
         </preConditions>
+
         <createTable tableName="tenures">
             <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -30,7 +31,6 @@
             <column name="grace_period_days" type="INT"/>
 
             <column name="interest" type="DECIMAL(19,2)"/>
-
             <column name="number_of_days" type="INT"/>
 
             <column name="product_id" type="BIGINT UNSIGNED">
@@ -39,4 +39,17 @@
             </column>
         </createTable>
     </changeSet>
+
+    <changeSet id="add-tenure-timestamps" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="tenures"/>
+        </preConditions>
+
+        <addColumn tableName="tenures">
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="submitted_at" type="TIMESTAMP"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -24,7 +24,7 @@
         <column name="expiry_time" type="BIGINT">
             <constraints nullable="false"/>
         </column>
-        <column name="verified" type="BOOLEAN" defaultValueBoolean="false">
+        <column name="verified" type="BIT(1)" defaultValueNumeric="0">
             <constraints nullable="false"/>
         </column>
 

@@ -89,9 +89,8 @@
             <column name="address" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_verified" type="BOOLEAN">
-                <constraints nullable="false"/>
-            </column>
+
+            <column name="is_verified" type="BIT(1)" defaultValueNumeric="0"/>
         </createTable>
 
         <addForeignKeyConstraint
