@@ -1,26 +1,30 @@
 package com.kuza.kuzasokoni.common.authentication.services;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 
+
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class SmsService {
 
-    private final WebClient webClient;
-
-    @Value("${app.sms.url}")
-    private String smsUrl;
+    private final RestClient restClient;
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final String LOWER_ALPHANUM = "abcdefghijklmnopqrstuvwxyz0123456789";
 
     @Value("${app.sms.clientId}")
     private String clientId;
@@ -34,14 +38,22 @@ public class SmsService {
     @Value("${app.sms.enabled:true}")
     private boolean smsEnabled;
 
-    public Mono<String> sendSms(String phone, String message) {
+    public SmsService(@Qualifier("smsRestClient") RestClient restClient) {
+        this.restClient = restClient;
+    }
+
+    public String sendSms(String phone, String message) {
         if (!smsEnabled) {
-            log.warn("SMS disabled. Would send to {}: {}", phone, message);
-            return Mono.just("SMS disabled (dev mode)");
+            String info = String.format(
+                    "SMS disabled. Would send to %s: %s",
+                    phone, message
+            );
+            log.warn(info);
+            return info;
         }
 
         String normalizedPhone = normalizePhone(phone);
-        String reference = "OTP-" + System.currentTimeMillis();
+        String reference =  System.currentTimeMillis() + generateRandom(LOWER_ALPHANUM,12);
 
         var payload = Map.of(
                 "auth", Map.of(
@@ -58,18 +70,53 @@ public class SmsService {
                 )
         );
 
-        log.debug("Payload being sent: {}", payload);
+        log.debug("SMS payload for {} (ref={}): {}", normalizedPhone, reference, payload);
 
-        return webClient.post()
-                .uri(smsUrl) // https://bulksms.fasthub.co.tz/api/sms/send
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .bodyValue(payload)
-                .retrieve()
-                .bodyToMono(Map.class)
-                .doOnSuccess(resp -> log.info("SMS sent successfully to {} | Ref: {}", normalizedPhone, reference))
-                .doOnError(err -> log.error("SMS failed to {}: {}", normalizedPhone, err.getMessage()))
-                .thenReturn("SMS sent");
+        try {
+            String body = restClient.post()
+                    .uri("/api/sms/send")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(payload)
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                        String errorBody = safeBody(response);
+                        log.error("SMS API 4xx for {} (ref={}): status={}, body={}",
+                                normalizedPhone, reference, response.getStatusCode(), errorBody);
+                        throw new SmsGatewayException(
+                                "Client error from SMS API: " + response.getStatusCode(),
+                                response.getStatusCode().value(),
+                                errorBody
+                        );
+                    })
+                    .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
+                        String errorBody = safeBody(response);
+                        log.error("SMS API 5xx for {} (ref={}): status={}, body={}",
+                                normalizedPhone, reference, response.getStatusCode(), errorBody);
+                        throw new SmsGatewayException(
+                                "Server error from SMS API: " + response.getStatusCode(),
+                                response.getStatusCode().value(),
+                                errorBody
+                        );
+                    })
+                    .body(String.class);
+
+            log.info("SMS API success for {} (ref={}): {}", normalizedPhone, reference, body);
+            return body;
+
+        } catch (RestClientException ex) {
+            log.error("SMS API call failed for {} (ref={}): {}",
+                    normalizedPhone, reference, ex.getMessage(), ex);
+            throw ex;
+        }
     }
+    private static String generateRandom(String charset, int len) {
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            sb.append(charset.charAt(RANDOM.nextInt(charset.length())));
+        }
+        return sb.toString();
+    }
+
 
     private String normalizePhone(String phone) {
         if (phone == null || phone.isBlank()) return phone;
@@ -78,5 +125,36 @@ public class SmsService {
         if (phone.startsWith("+")) return phone.substring(1);
         return phone;
     }
+
+
+    private String safeBody(ClientHttpResponse response) {
+        try {
+            String body = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
+            return body != null ? body : "";
+        } catch (IOException e) {
+            log.warn("Failed to read SMS error body: {}", e.getMessage());
+            return "";
+        }
+    }
+
+    public static class SmsGatewayException extends RuntimeException {
+        private final int statusCode;
+        private final String responseBody;
+
+        public SmsGatewayException(String message, int statusCode, String responseBody) {
+            super(message);
+            this.statusCode = statusCode;
+            this.responseBody = responseBody;
+        }
+
+        public int getStatusCode() {
+            return statusCode;
+        }
+
+        public String getResponseBody() {
+            return responseBody;
+        }
+    }
+
 
 }

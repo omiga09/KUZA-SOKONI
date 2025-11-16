@@ -3,9 +3,9 @@ spring:
     name: KUZA-SOKONI
 
   datasource:
-    url: jdbc:mysql://localhost:3306/kuza_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: omar
-    password: omar@3000
+    url: jdbc:mysql://localhost:3306/new_kuza?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ipg_user
+    password: Kituntu@2930Mbwa
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -40,7 +40,7 @@ app:
     resend-cooldown-seconds: 60
 
   sms:
-    url: https://bulksms.fasthub.co.tz/api/sms/send
+    url: https://bulksms.fasthub.co.tz
     clientId: "54637ab2-1ab8-4bf7-b6e8-ec8969b6decd"
     clientSecret: "e3e568c6-5103-4447-b830-62ac747d470b"
     source: KUZACAPITAL

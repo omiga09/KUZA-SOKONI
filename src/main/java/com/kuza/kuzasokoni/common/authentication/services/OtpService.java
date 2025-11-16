@@ -35,11 +35,7 @@ public class OtpService {
 
         String message = "Your OTP is " + otpCode + ". Use it to log in. Valid for 5 minutes.";
 
-        smsService.sendSms(user.getPhoneNumber(), message)
-                .subscribe(
-                        success -> log.info("OTP sent successfully to {}", user.getPhoneNumber()),
-                        error -> log.error("Failed to send OTP to {}: {}", user.getPhoneNumber(), error.getMessage())
-                );
+        smsService.sendSms(user.getPhoneNumber(), message);
     }
 
 
