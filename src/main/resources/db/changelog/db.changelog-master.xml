@@ -7,6 +7,7 @@
 
     <include file="db/changelog/15-10-2025-repayment-strategy-table.xml"/>
     <include file="db/changelog/15-10-2025-product-table.xml"/>
+    <include file="db/changelog/15-10-2025-user-table.xml"/>
     <include file="db/changelog/15-10-2025-client-table.xml"/>
     <include file="db/changelog/15-10-2025-loan-table.xml"/>
     <include file="db/changelog/15-10-2025-charges-table.xml"/>
@@ -21,9 +22,10 @@
     <include file="db/changelog/15-10-2025-app-permission-table.xml"/>
     <include file="db/changelog/15-10-2025-role-table.xml"/>
     <include file="db/changelog/15-10-2025-role-permissions-table.xml"/>
-    <include file="db/changelog/15-10-2025-user-table.xml"/>
     <include file="db/changelog/15-10-2025-user-entity-table.xml"/>
     <include file="db/changelog/15-10-2025-user-entity-role-table.xml"/>
     <include file="db/changelog/15-10-2025-otp-table.xml"/>
+    <include file="db/changelog/15-10-2025-user-entity-types.xml"/>
+    <include file="db/changelog/15-10-2025-user-user-types.xml"/>
 
 </databaseChangeLog>

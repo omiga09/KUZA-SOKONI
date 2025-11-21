@@ -54,4 +54,8 @@ public class ClientCreateCommand {
     @Valid
     @Size(min = 1, message = "At least one guarantor is required")
     private List<GuarantorCreateCommand> guarantors;
+
+    private ClientStatus status = ClientStatus.PENDING;
+
+    private VerificationStatus isVerified = VerificationStatus.UNVERIFIED;
 }

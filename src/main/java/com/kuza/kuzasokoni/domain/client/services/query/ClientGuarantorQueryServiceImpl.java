@@ -13,7 +13,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ClientGuarantorQueryServiceImpl implements ClientGuarantorQueryService {
 
-
     @Autowired
     ClientRepository clientRepository;
 

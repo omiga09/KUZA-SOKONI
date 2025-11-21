@@ -3,6 +3,8 @@ package com.kuza.kuzasokoni.domain.product.services.query;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ChargesConfigView;
 import com.kuza.kuzasokoni.domain.product.repositories.ChargesConfigRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +17,8 @@ public class ChargesConfigQueryServiceImpl implements ChargesConfigQueryService 
     private final ChargesConfigRepository repository;
 
     @Override
-    public List<ChargesConfigView> getAllConfigs() {
-        return repository.findAllBy();
+    public Page<ChargesConfigView> getAllConfigs(Pageable pageable) {
+        return repository.findAllBy(pageable);
     }
 
 

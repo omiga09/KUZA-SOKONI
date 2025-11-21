@@ -8,16 +8,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/repayment-strategies")
+@RequestMapping("/repayment-strategies")
 @RequiredArgsConstructor
 public class RepaymentStrategyCommandController {
 
     private final RepaymentStrategyCommandService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<RepaymentStrategyView>> create(@Valid @RequestBody RepaymentStrategyCommand command) {
         RepaymentStrategyView view = service.create(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(

@@ -6,6 +6,8 @@ import com.kuza.kuzasokoni.domain.loan.enums.ScheduleStatus;
 import com.kuza.kuzasokoni.domain.loan.repositories.LoanRepository;
 import com.kuza.kuzasokoni.domain.loan.repositories.RepaymentScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +26,9 @@ public class PenaltyMonitorServiceImpl implements PenaltyMonitorService {
 
     @Scheduled(cron = "0 0 2 * * *")
     public void checkLateInstallments() {
-        List<RepaymentSchedule> overdueSchedules = scheduleRepository.findAllPendingAndOverdue(LocalDate.now());
+        Page<RepaymentSchedule> overdueSchedules = scheduleRepository.findAllPendingAndOverdue(LocalDate.now(),Pageable.unpaged());
 
-        List<Loan> allLoans = loanRepository.findAllWithSchedules();
+        Page<Loan> allLoans = loanRepository.findAllWithSchedules(Pageable.unpaged());
 
 
         for (Loan loan : allLoans) {

@@ -4,6 +4,8 @@ import com.kuza.kuzasokoni.domain.product.entities.ChargesConfig;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ChargesConfigView;
 import com.kuza.kuzasokoni.domain.product.enums.CollectedOn;
 import com.kuza.kuzasokoni.domain.product.enums.RepaymentType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,17 +22,16 @@ public interface ChargesConfigRepository extends JpaRepository<ChargesConfig,Lon
     Optional<ChargesConfigView> findProjectedById(@Param("id") Long id);
 
 
-    @Query("SELECT c FROM ChargesConfig c WHERE c.collectedOn = :collectedOn")
-    List<ChargesConfigView> findByCollectedOn(CollectedOn collectedOn);
+   // @Query("SELECT c FROM ChargesConfig c WHERE c.collectedOn = :collectedOn")
+    //Page<ChargesConfigView> findByCollectedOn(CollectedOn collectedOn);
 
-    @Query("SELECT c FROM ChargesConfig c WHERE c.repaymentType = :repaymentType")
-    List<ChargesConfigView> findByRepaymentType(RepaymentType repaymentType);
+    //@Query("SELECT c FROM ChargesConfig c WHERE c.repaymentType = :repaymentType")
+   // Page<ChargesConfigView> findByRepaymentType(RepaymentType repaymentType);
 
-    @Query("SELECT c FROM ChargesConfig c WHERE c.amount >= :minAmount")
-    List<ChargesConfigView> findByAmountGreaterThan(BigDecimal minAmount);
+    //@Query("SELECT c FROM ChargesConfig c WHERE c.amount >= :minAmount")
+    //Page<ChargesConfigView> findByAmountGreaterThan(BigDecimal minAmount);
 
-    List<ChargesConfigView> findAllBy();
-
+    Page<ChargesConfigView> findAllBy(Pageable pageable);
 
 
 }

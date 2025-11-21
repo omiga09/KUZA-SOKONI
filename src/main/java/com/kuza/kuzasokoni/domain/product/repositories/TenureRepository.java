@@ -3,6 +3,8 @@ package com.kuza.kuzasokoni.domain.product.repositories;
 
 import com.kuza.kuzasokoni.domain.product.dtos.query.TenureView;
 import com.kuza.kuzasokoni.domain.product.entities.Tenure;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -10,7 +12,7 @@ import java.util.List;
 
 public interface TenureRepository extends JpaRepository<Tenure, Long> {
 
-        List<Tenure> findByProductId(Long productId);
+        Page<Tenure> findByProductId(Long productId, Pageable pageable);
 
         // Projection using native SQL
         @Query(value = """
@@ -33,6 +35,6 @@ public interface TenureRepository extends JpaRepository<Tenure, Long> {
         FROM tenures t
         WHERE t.product_id = :productId
         """, nativeQuery = true)
-        List<TenureView> findTenureViewsByProductId(Long productId);
+        Page<TenureView> findTenureViewsByProductId(Long productId, Pageable pageable);
     }
 

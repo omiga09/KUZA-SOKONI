@@ -4,7 +4,10 @@ import com.kuza.kuzasokoni.common.response.StandardResponse;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ChargesConfigView;
 import com.kuza.kuzasokoni.domain.product.services.query.ChargesConfigQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +20,16 @@ public class ChargesConfigQueryController {
     private final ChargesConfigQueryService service;
 
     @GetMapping
-    public ResponseEntity<StandardResponse<List<ChargesConfigView>>> getAll() {
-        List<ChargesConfigView> configs = service.getAllConfigs();
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<StandardResponse<Page<ChargesConfigView>>> getAll(Pageable pageable) {
+        Page<ChargesConfigView> configs = service.getAllConfigs(pageable);
         return ResponseEntity.ok(
                 StandardResponse.success(200, "Charge configs fetched successfully", "/api/charges/config", configs)
         );
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ChargesConfigView>> getById(@PathVariable Long id) {
         return service.getConfigById(id)
                 .map(config -> ResponseEntity.ok(
@@ -35,3 +40,4 @@ public class ChargesConfigQueryController {
                 ));
     }
 }
+

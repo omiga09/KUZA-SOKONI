@@ -1,6 +1,6 @@
 package com.kuza.kuzasokoni.security.jwtRequestFilter;
 
-    import com.kuza.kuzasokoni.common.authentication.services.CustomerUserDetailsService;
+    import com.kuza.kuzasokoni.domain.authentication.services.query.CustomerUserDetailsService;
     import com.kuza.kuzasokoni.security.jwtUtil.JwtUtil;
     import jakarta.servlet.FilterChain;
     import jakarta.servlet.ServletException;

@@ -7,5 +7,7 @@ public enum EntityType {
     SIMU,
     TUISHI,
     WASOME,
-    MAISHA
+    MAISHA,
+    MASTER,
+    NON
 }

@@ -3,8 +3,9 @@ package com.kuza.kuzasokoni.domain.client.repositories;
 import com.kuza.kuzasokoni.domain.client.dtos.query.ClientGuarantorView;
 import com.kuza.kuzasokoni.domain.client.dtos.query.ClientView;
 import com.kuza.kuzasokoni.domain.client.dtos.query.DocumentationView;
-import com.kuza.kuzasokoni.domain.client.dtos.query.GuarantorView;
 import com.kuza.kuzasokoni.domain.client.entities.Client;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,7 +33,32 @@ SELECT c.id AS id,
        c.entityTypes AS entityTypes
 FROM Client c
 """)
-    List<ClientView> findAllClientViews();
+    Page<ClientView> findAllClientViews(Pageable pageable);
+
+    @Query("""
+SELECT c.id AS id,
+       c.firstName AS firstName,
+       c.secondName AS secondName,
+       c.lastName AS lastName,
+       c.phoneNumber AS phoneNumber,
+       c.email AS email,
+       c.dateOfBirth AS dateOfBirth,
+       c.gender AS gender,
+       c.address AS address,
+       c.status AS status,
+       c.isVerified AS isVerified,
+       c.createdAt AS createdAt,
+       c.updatedAt AS updatedAt,
+       c.submittedAt AS submittedAt,
+       c.entityTypes AS entityTypes
+FROM Client c
+WHERE 
+    LOWER(c.firstName) LIKE LOWER(CONCAT('%', :search, '%'))
+    OR LOWER(c.lastName) LIKE LOWER(CONCAT('%', :search, '%'))
+    OR LOWER(c.phoneNumber) LIKE LOWER(CONCAT('%', :search, '%'))
+    OR LOWER(c.email) LIKE LOWER(CONCAT('%', :search, '%'))
+""")
+    Page<ClientView> searchClientViews(@Param("search") String search, Pageable pageable);
 
     @Query("""
 SELECT c.id AS id,
@@ -55,6 +81,7 @@ WHERE c.id = :id
 """)
     Optional<ClientView> findClientViewById(@Param("id") Long id);
 
+
     @Query("""
 SELECT d.id AS id,
        d.nidaNumber AS nidaNumber,
@@ -67,8 +94,6 @@ WHERE c.id = :clientId
 """)
     Optional<DocumentationView> findDocumentationViewByClientId(@Param("clientId") Long clientId);
 
-   // @Query("SELECT g.name AS name, g.relationship AS relationship, g.phoneNumber AS phoneNumber, g.address AS address, g.isVerified AS isVerified FROM Guarantor g WHERE g.client.id = :clientId")
-   // List<GuarantorView> findGuarantorsByClientId(@Param("clientId") Long clientId);
 
     @Query("""
 SELECT c.id AS id,
@@ -80,11 +105,26 @@ WHERE c.id = :clientId
 """)
     Optional<ClientGuarantorView> findClientGuarantors(@Param("clientId") Long clientId);
 
-   // @Query("""
-    //SELECT c FROM Client c
-    //LEFT JOIN FETCH c.entityTypes
-    //WHERE c.id = :id
-   // """)
-    //Optional<Client> findClientWithEntityTypesById(@Param("id") Long id);
+    Page<Client> findAllByActive(Boolean active, Pageable pageable);
 
+    @Query("""
+SELECT c.id AS id,
+       c.firstName AS firstName,
+       c.secondName AS secondName,
+       c.lastName AS lastName,
+       c.phoneNumber AS phoneNumber,
+       c.email AS email,
+       c.dateOfBirth AS dateOfBirth,
+       c.gender AS gender,
+       c.address AS address,
+       c.status AS status,
+       c.isVerified AS isVerified,
+       c.createdAt AS createdAt,
+       c.updatedAt AS updatedAt,
+       c.submittedAt AS submittedAt,
+       c.entityTypes AS entityTypes
+FROM Client c
+WHERE c.phoneNumber = :phoneNumber
+""")
+    Optional<ClientView> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 }

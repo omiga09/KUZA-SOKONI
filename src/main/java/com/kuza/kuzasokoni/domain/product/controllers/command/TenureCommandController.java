@@ -4,6 +4,7 @@ package com.kuza.kuzasokoni.domain.product.controllers.command;
 import com.kuza.kuzasokoni.domain.product.dtos.command.TenureCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.command.TenureUpdateCommand;
 import com.kuza.kuzasokoni.domain.product.services.command.TenureCommandService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,11 +17,13 @@ public class TenureCommandController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public TenureCreateCommand createTenure(@RequestBody TenureCreateCommand cmd) {
         return tenureCommandService.createTenure(cmd);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public TenureUpdateCommand updateTenure(@PathVariable Long id,
                                             @RequestBody TenureUpdateCommand cmd) {
         cmd.setId(id);
@@ -28,6 +31,7 @@ public class TenureCommandController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public void deleteTenure(@PathVariable Long id) {
         tenureCommandService.deleteTenure(id);
     }

@@ -42,6 +42,62 @@
         </createIndex>
     </changeSet>
 
+    <!-- enabled column -->
+    <changeSet id="add-enabled-column" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="clients" columnName="enabled"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="clients">
+            <column name="enabled" type="BIT(1)" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- active column -->
+    <changeSet id="add-active-column" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="clients" columnName="active"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="clients">
+            <column name="active" type="BIT(1)" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- user_id column -->
+    <changeSet id="add-user-id-column" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="clients" columnName="user_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="clients">
+            <column name="user_id" type="BIGINT UNSIGNED"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="clients"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_client_user"/>
+    </changeSet>
+
+    <!-- ensure phone_number is NOT NULL -->
+    <changeSet id="update-phone-number" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="clients" columnName="phone_number"/>
+        </preConditions>
+        <modifyDataType tableName="clients" columnName="phone_number" newDataType="VARCHAR(50)"/>
+        <addNotNullConstraint tableName="clients" columnName="phone_number" columnDataType="VARCHAR(50)"/>
+    </changeSet>
+
     <!-- Client entity types -->
     <changeSet id="create-client-entity-types" author="kuza">
         <preConditions onFail="MARK_RAN">

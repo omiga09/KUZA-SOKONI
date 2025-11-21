@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kuza.kuzasokoni.common.audit.Auditable;
+import com.kuza.kuzasokoni.domain.authentication.entity.User;
 import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.enums.ClientStatus;
 import com.kuza.kuzasokoni.domain.client.enums.VerificationStatus;
@@ -26,11 +27,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Table(
-        name = "clients",
+@Table(name = "clients",
         indexes = {
                 @Index(name = "idx_client_status", columnList = "status"),
-                @Index(name = "idx_client_verification", columnList = "is_verified")
+                @Index(name = "idx_client_verification", columnList = "is_verified"),
+                @Index(name = "idx_client_phone", columnList = "phone_number"),
+                @Index(name = "idx_client_email", columnList = "email")
         }
 )
 public class Client extends Auditable {
@@ -48,7 +50,7 @@ public class Client extends Auditable {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    @NotBlank
+    @Column(unique = true, nullable = false)
     @Pattern(regexp = "^255\\d{9}$", message = "Phone number must start with 255 and contain 12 digits.")
     private String phoneNumber;
 
@@ -67,6 +69,12 @@ public class Client extends Auditable {
     @NotBlank
     private String address;
 
+    @Column(name = "enabled", columnDefinition = "BIT(1)")
+    private Boolean enabled = true;
+
+    @Column(name = "active", columnDefinition = "BIT(1)")
+    private Boolean active = true;
+
     @Enumerated(EnumType.STRING)
     private ClientStatus status = ClientStatus.PENDING;
 
@@ -83,6 +91,10 @@ public class Client extends Auditable {
     @JsonManagedReference
     private Documentation documentation;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
     @ElementCollection
     @CollectionTable(name = "client_guarantors", joinColumns = @JoinColumn(name = "client_id"))
     @AttributeOverrides({
@@ -90,7 +102,7 @@ public class Client extends Auditable {
             @AttributeOverride(name = "relationship", column = @Column(name = "relationship")),
             @AttributeOverride(name = "phoneNumber", column = @Column(name = "phone_number")),
             @AttributeOverride(name = "address", column = @Column(name = "address")),
-            @AttributeOverride(name = "isVerified", column = @Column(name = "is_verified"))
+            @AttributeOverride(name = "isVerified", column = @Column(name = "is_verified", columnDefinition = "BIT(1)"))
     })
     private List<Guarantor> guarantors;
 }

@@ -2,6 +2,8 @@ package com.kuza.kuzasokoni.domain.product.repositories;
 
 import com.kuza.kuzasokoni.domain.product.dtos.query.ChargeView;
 import com.kuza.kuzasokoni.domain.product.entities.Charge;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -24,7 +26,7 @@ public interface ChargeRepository extends JpaRepository<Charge, Long> {
             c.product AS product
         FROM Charge c
     """)
-    List<ChargeView> findAllProjected();
+    Page<ChargeView> findAllProjected(Pageable pageable);
 
     @Query("""
     SELECT 

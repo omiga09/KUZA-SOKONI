@@ -3,6 +3,8 @@ package com.kuza.kuzasokoni.domain.product.repositories;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ImageView;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ProductView;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,7 +27,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
            p.status AS status
     FROM Product p
 """)
-    List<ProductView> findAllProductViews();
+    Page<ProductView> findAllProductViews(Pageable pageable);
 
     @Query("""
     SELECT p.id AS id,
@@ -54,6 +56,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT DISTINCT p FROM Product p " +
             "LEFT JOIN FETCH p.charges " +
             "LEFT JOIN FETCH p.tenures")
-    List<Product> findAllProductsWithDetails();
+    Page<Product> findAllProductsWithDetails(Pageable pageable);
 
 }

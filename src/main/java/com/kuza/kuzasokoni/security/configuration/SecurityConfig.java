@@ -1,6 +1,6 @@
 package com.kuza.kuzasokoni.security.configuration;
 
-import com.kuza.kuzasokoni.common.authentication.services.CustomerUserDetailsService;
+import com.kuza.kuzasokoni.domain.authentication.services.query.CustomerUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +19,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+
         return new BCryptPasswordEncoder();
     }
 
@@ -27,10 +28,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // disable CSRF
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // register + login hawahitaji token
-                        .requestMatchers("/api/otp/**").permitAll() // verify OTP pia
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/otp/**").permitAll()
                         .anyRequest().permitAll()
                 )
+
                 .httpBasic(httpBasic -> {}); // enable basic auth
         return http.build();
     }

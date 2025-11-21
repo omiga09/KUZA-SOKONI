@@ -8,16 +8,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/charges")
+@RequestMapping("/charges")
 @RequiredArgsConstructor
 public class ChargeCommandController {
 
     private final ChargeCommandService chargeCommandService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ChargeView>> createCharge(@Valid @RequestBody ChargeCreateCommand cmd) {
         ChargeView charge = chargeCommandService.createCharge(cmd);
         return ResponseEntity.status(HttpStatus.CREATED).body(

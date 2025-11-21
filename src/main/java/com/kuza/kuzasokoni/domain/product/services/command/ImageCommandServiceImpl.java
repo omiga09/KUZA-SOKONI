@@ -1,7 +1,7 @@
 package com.kuza.kuzasokoni.domain.product.services.command;
 
 import com.kuza.kuzasokoni.common.audit.Images;
-import com.kuza.kuzasokoni.common.image.repository.ImagesRepository;
+import com.kuza.kuzasokoni.common.repository.ImagesRepository;
 import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.product.dtos.command.ImageCreateCommand;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ImageView;

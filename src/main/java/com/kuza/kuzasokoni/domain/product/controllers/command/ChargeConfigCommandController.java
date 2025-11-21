@@ -9,16 +9,18 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/charges/config")
+@RequestMapping("/charges/config")
 @RequiredArgsConstructor
 public class ChargeConfigCommandController {
 
     private final ChargeConfigCommandService service;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ChargesConfigView>> create(@Valid @RequestBody ChargesConfigCreateCommand cmd) {
         ChargesConfigView view = service.createConfig(cmd);
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -27,6 +29,7 @@ public class ChargeConfigCommandController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ChargesConfigView>> update(@Valid @RequestBody ChargesConfigUpdateCommand cmd) {
         ChargesConfigView view = service.updateConfig(cmd);
         return ResponseEntity.ok(

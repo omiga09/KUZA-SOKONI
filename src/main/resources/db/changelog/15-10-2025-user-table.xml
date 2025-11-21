@@ -6,16 +6,16 @@
            http://www.liquibase.org/xml/ns/dbchangelog
            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <!-- CREATE TABLE -->
-    <changeSet id="4" author="kuza">
+    <!-- 1. Users table -->
+    <changeSet id="20251121-create-users-table" author="kuza">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="user"/>
+                <tableExists tableName="users"/>
             </not>
         </preConditions>
 
-        <createTable tableName="user">
-            <column name="id" type="BIGINT" autoIncrement="true">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT UNSIGNED" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
@@ -23,32 +23,99 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="email" type="VARCHAR(255)"/>
-            <column name="phone_number" type="VARCHAR(50)"/>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="second_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="phone_number" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
             <column name="password" type="VARCHAR(255)"/>
-            <column name="is_verified" type="VARCHAR(50)"/>
+            <column name="pin" type="VARCHAR(4)"/>
+            <column name="enabled" type="BIT(1)" defaultValueBoolean="true"/>
+            <column name="password_expiry_date" type="DATE"/>
+            <column name="password_expired" type="BIT(1)" defaultValueBoolean="false"/>
+            <column name="is_verified" type="VARCHAR(50)" defaultValue="VERIFIED">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_at" type="DATETIME(6)"/>
+            <column name="updated_at" type="DATETIME(6)"/>
+            <column name="submitted_at" type="DATETIME(6)"/>
         </createTable>
+
+        <createIndex tableName="users" indexName="idx_users_phone_number">
+            <column name="phone_number"/>
+        </createIndex>
+        <createIndex tableName="users" indexName="idx_users_email">
+            <column name="email"/>
+        </createIndex>
+        <createIndex tableName="users" indexName="idx_users_username">
+            <column name="username"/>
+        </createIndex>
     </changeSet>
-    <changeSet id="20251115-add-pin-to-user" author="kuza">
+
+    <!-- 2. user_user_types table for ElementCollection -->
+    <changeSet id="20251121-create-user-user-types" author="kuza">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="user" columnName="pin"/>
+                <tableExists tableName="user_user_types"/>
             </not>
         </preConditions>
 
-        <addColumn tableName="user">
-            <column name="pin" type="VARCHAR(255)">
-                <constraints nullable="true"/>
+        <createTable tableName="user_user_types">
+            <column name="user_id" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
             </column>
-        </addColumn>
+            <column name="user_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="user_user_types"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_user_user_types_users"/>
     </changeSet>
 
-    <changeSet id="20251114-02-add-columns-to-user" author="kuza">
-        <addColumn tableName="user">
-            <column name="created_at" type="DATETIME"/>
-            <column name="updated_at" type="DATETIME"/>
-            <column name="submitted_at" type="DATETIME"/>
-        </addColumn>
+    <!-- 3. user_entity_types table for ElementCollection -->
+    <changeSet id="20251121-create-user-entity-types" author="kuza">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_entity_types"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="user_entity_types">
+            <column name="user_id" type="BIGINT UNSIGNED">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="user_entity_types"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_user_entity_types_users"/>
     </changeSet>
 
 </databaseChangeLog>

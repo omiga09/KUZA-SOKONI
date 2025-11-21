@@ -18,7 +18,7 @@
         <column name="code" type="VARCHAR(6)">
             <constraints nullable="false"/>
         </column>
-        <column name="user_id" type="BIGINT">
+        <column name="user_id" type="BIGINT UNSIGNED">
             <constraints nullable="false"/>
         </column>
         <column name="expiry_time" type="BIGINT">
@@ -33,7 +33,7 @@
     <addForeignKeyConstraint baseColumnNames="user_id"
                              baseTableName="otp"
                              referencedColumnNames="id"
-                             referencedTableName="user"
+                             referencedTableName="users"
                              constraintName="fk_otp_user"/>
 </changeSet>
     <changeSet id="20251114-02-add-columns-to-user" author="kuza">

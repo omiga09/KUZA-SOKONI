@@ -7,13 +7,14 @@ import com.kuza.kuzasokoni.domain.loan.repositories.LoanRepository;
 import com.kuza.kuzasokoni.domain.loan.services.command.RepaymentScheduleGenerationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loans")
+@RequestMapping("/loans")
 @RequiredArgsConstructor
 public class RepaymentScheduleCommandController {
 
@@ -21,6 +22,7 @@ public class RepaymentScheduleCommandController {
     private final RepaymentScheduleGenerationService repaymentScheduleService;
 
     @PostMapping("/{loanId}/generate-schedule")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<List<RepaymentSchedule>> generateSchedule(
             @PathVariable Long loanId,
             @RequestParam(required = false) LocalDate startDate
@@ -30,13 +32,14 @@ public class RepaymentScheduleCommandController {
 
         LocalDate effectiveStartDate = startDate != null ? startDate : loan.getDisbursedDate();
 
-        // tumia effectiveStartDate badala ya repaymentStartDate
+
         List<RepaymentSchedule> schedules = repaymentScheduleService.generateSchedule(loan, effectiveStartDate);
 
         return ResponseEntity.ok(schedules);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<Void> updateSchedule(@RequestBody UpdateRepaymentScheduleCommand cmd) {
         repaymentScheduleService.updateRepaymentSchedule(cmd);
         return ResponseEntity.ok().build();

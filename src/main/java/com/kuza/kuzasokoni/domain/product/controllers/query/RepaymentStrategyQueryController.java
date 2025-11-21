@@ -5,9 +5,9 @@ import com.kuza.kuzasokoni.domain.product.dtos.query.RepaymentStrategyView;
 import com.kuza.kuzasokoni.domain.product.services.query.RepaymentStrategyQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/repayment/repayment-strategies")
@@ -17,14 +17,25 @@ public class RepaymentStrategyQueryController {
     private final RepaymentStrategyQueryService service;
 
     @GetMapping
-    public ResponseEntity<StandardResponse<List<RepaymentStrategyView>>> getAll() {
-        List<RepaymentStrategyView> strategies = service.getAll();
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<?> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ){
         return ResponseEntity.ok(
-                StandardResponse.success(200, "Repayment strategies fetched successfully", "/api/repayment/repayment-strategies", strategies)
+                StandardResponse.success(
+                        200,
+                        "Fetched successfully",
+                        "/api/repayment/repayment-strategies",
+                        service.getAll(page, size, sortBy, sortDir)
+                )
         );
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<RepaymentStrategyView>> getById(@PathVariable Long id) {
         return service.getById(id)
                 .map(strategy -> ResponseEntity.ok(

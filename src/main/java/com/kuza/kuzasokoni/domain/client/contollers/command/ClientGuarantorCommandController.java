@@ -9,13 +9,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/clients/{clientId}/guarantors")
+@RequestMapping("/guarantors")
 @RequiredArgsConstructor
 @Validated
 public class ClientGuarantorCommandController {
@@ -23,6 +24,7 @@ public class ClientGuarantorCommandController {
     private final GuarantorCommandService clientGuarantorService;
 
     @PutMapping
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ClientView>> updateGuarantors(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long clientId,
             @RequestBody @Valid List<GuarantorCreateCommand> guarantors

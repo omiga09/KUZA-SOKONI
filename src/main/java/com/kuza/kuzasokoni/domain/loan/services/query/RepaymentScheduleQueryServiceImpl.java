@@ -3,6 +3,8 @@ package com.kuza.kuzasokoni.domain.loan.services.query;
 import com.kuza.kuzasokoni.domain.loan.dtos.query.RepaymentScheduleView;
 import com.kuza.kuzasokoni.domain.loan.repositories.RepaymentScheduleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +16,7 @@ public class RepaymentScheduleQueryServiceImpl implements RepaymentScheduleQuery
     private final RepaymentScheduleRepository repository;
 
     @Override
-    public List<RepaymentScheduleView> getByLoan(Long loanId) {
-        return repository.findByLoanId(loanId);
+    public Page<RepaymentScheduleView> getByLoan(Long loanId, Pageable pageable) {
+        return repository.findByLoanId(loanId,pageable);
     }
 }

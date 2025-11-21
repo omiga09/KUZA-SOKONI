@@ -1,5 +1,6 @@
 package com.kuza.kuzasokoni.security.jwtUtil;
 
+import com.kuza.kuzasokoni.common.utils.EntityType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,15 +20,17 @@ import java.util.function.Function;
         private final String SECRET_KEY = "CW4XAMzsfGInhHYOgCDj1tQToNbfc3SGwHw602yibCSDed63F3pQWcpw6ogFkrTyvkL/hOpiRJuEOPG0mYSSRA==";
         private final Key key = Keys.hmacShaKeyFor(io.jsonwebtoken.io.Decoders.BASE64.decode(SECRET_KEY));
 
+
         // 🔹 Tengeneza token
-        public String generateToken(UserDetails userDetails) {
+        public String generateToken(UserDetails userDetails, String userType) {
             Map<String, Object> claims = new HashMap<>();
-            return createToken(claims, userDetails.getUsername());
+            return createToken(claims, userDetails.getUsername(),userType);
         }
 
         // 🔹 Tumia claims na username kutengeneza token
-        private String createToken(Map<String, Object> claims, String subject) {
-            long expirationTime = 1000 * 60 * 60 * 10; // 10 hours
+        private String createToken(Map<String, Object> claims, String subject,String userType) {
+
+            long expirationTime = userType.equals("CUSTOMER") ? 1000L * 60 * 60 * 24 * 360 : 1000 * 60 * 60 ;
 
             return Jwts.builder()
                     .setClaims(claims)

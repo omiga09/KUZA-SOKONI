@@ -1,7 +1,7 @@
 package com.kuza.kuzasokoni.domain.client.services.command;
 
 import com.kuza.kuzasokoni.common.audit.Images;
-import com.kuza.kuzasokoni.common.image.repository.ImagesRepository;
+import com.kuza.kuzasokoni.common.repository.ImagesRepository;
 import com.kuza.kuzasokoni.common.utils.EntityType;
 import com.kuza.kuzasokoni.domain.client.dtos.query.DocumentationView;
 import com.kuza.kuzasokoni.domain.client.entities.Client;

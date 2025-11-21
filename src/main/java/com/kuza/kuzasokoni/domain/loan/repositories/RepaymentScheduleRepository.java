@@ -2,13 +2,14 @@ package com.kuza.kuzasokoni.domain.loan.repositories;
 
 import com.kuza.kuzasokoni.domain.loan.dtos.query.RepaymentScheduleView;
 import com.kuza.kuzasokoni.domain.loan.entities.RepaymentSchedule;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 public interface RepaymentScheduleRepository extends JpaRepository<RepaymentSchedule, Long> {
@@ -33,7 +34,7 @@ public interface RepaymentScheduleRepository extends JpaRepository<RepaymentSche
         WHERE r.loan.id = :loanId
         ORDER BY r.installmentNumber ASC
     """)
-    List<RepaymentScheduleView> findByLoanId(Long loanId);
+    Page<RepaymentScheduleView> findByLoanId(Long loanId, Pageable pageable);
 
     @Query("""
         SELECT r.id AS id,
@@ -61,7 +62,7 @@ public interface RepaymentScheduleRepository extends JpaRepository<RepaymentSche
 
 
     @Query("SELECT r FROM RepaymentSchedule r WHERE r.status = 'PENDING' AND r.expectedDate < :today")
-    List<RepaymentSchedule> findAllPendingAndOverdue(@Param("today") LocalDate today);
+    Page<RepaymentSchedule> findAllPendingAndOverdue(@Param("today") LocalDate today, Pageable unpaged);
 
     @Modifying
     @Query("DELETE FROM RepaymentSchedule r WHERE r.loan.id = :loanId")

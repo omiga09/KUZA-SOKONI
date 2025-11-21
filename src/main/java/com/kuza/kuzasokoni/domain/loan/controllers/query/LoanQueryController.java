@@ -1,39 +1,48 @@
 package com.kuza.kuzasokoni.domain.loan.controllers.query;
 
-
+import com.kuza.kuzasokoni.common.response.PageResponse;
 import com.kuza.kuzasokoni.domain.loan.dtos.query.LoanRepaymentView;
 import com.kuza.kuzasokoni.domain.loan.services.query.LoanQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/loan/loans")
+@RequestMapping("/loan-query")
 @RequiredArgsConstructor
 public class LoanQueryController {
 
-        private final LoanQueryService loanQueryService;
+    private final LoanQueryService loanQueryService;
 
     @GetMapping
-    public ResponseEntity<List<LoanRepaymentView>> getAllRepayments() {
-        List<LoanRepaymentView> loans = loanQueryService.getRepaymentStatus();
-        if (loans.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'FINANCE', 'LOAN_OFFICER')")
+    public ResponseEntity<?> getAllLoans(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        PageResponse<LoanRepaymentView> loans =
+                loanQueryService.getAllLoans(page, size, sortBy, sortDir);
+
         return ResponseEntity.ok(loans);
     }
 
-
-    @GetMapping("/{loanId}")
-        public LoanRepaymentView getLoanById(@PathVariable Long loanId) {
-
-        return loanQueryService.getLoanById(loanId);
-        }
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'ADMIN', 'FINANCE', 'LOAN_OFFICER')")
+    public ResponseEntity<PageResponse<LoanRepaymentView>> searchLoans(
+            @RequestParam String q,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
+    ) {
+        return ResponseEntity.ok(loanQueryService.searchLoans(q, page, size, sortBy, sortDir));
     }
 
-
+    @GetMapping("/{loanId}")
+    public LoanRepaymentView getLoanById(@PathVariable Long loanId) {
+        return loanQueryService.getLoanById(loanId);
+    }
+}

@@ -1,10 +1,16 @@
 package com.kuza.kuzasokoni.domain.product.services.query;
 
+import com.kuza.kuzasokoni.common.response.PageResponse;
+import com.kuza.kuzasokoni.common.utils.PageUtil;
 import com.kuza.kuzasokoni.domain.product.dtos.query.ProductView;
 import com.kuza.kuzasokoni.domain.product.entities.Product;
 import com.kuza.kuzasokoni.domain.product.exception.ProductNotFoundException;
 import com.kuza.kuzasokoni.domain.product.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,12 +24,12 @@ public class ProductQueryServiceImpl implements ProductQueryService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<ProductView> getAllProducts() {
-        List<Product> products = productRepository.findAllProductsWithDetails();
-        return products.stream()
-                .map(this::toProductView)
-                .collect(Collectors.toList());
+    public PageResponse<ProductView> getAllProducts(int page, int size, String sortBy, String sortDir) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<ProductView> result = productRepository.findAllProductViews(pageable);
+        return PageUtil.build(result);
     }
+
 
     @Override
     public ProductView getProductById(Long id) {

@@ -1,6 +1,6 @@
 package com.kuza.kuzasokoni.domain.client.contollers.command;
 
-import com.kuza.kuzasokoni.common.image.repository.ImagesRepository;
+import com.kuza.kuzasokoni.common.repository.ImagesRepository;
 import com.kuza.kuzasokoni.common.response.StandardResponse;
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientCreateCommand;
 import com.kuza.kuzasokoni.domain.client.dtos.command.ClientUpdateCommand;
@@ -16,12 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/clients")
+@RequestMapping("/client")
 @RequiredArgsConstructor
 @Validated
 public class ClientCommandController {
@@ -31,6 +32,7 @@ public class ClientCommandController {
     private final ImagesRepository imagesRepo;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ClientView>> create(@Valid @RequestBody ClientCreateCommand cmd) {
         ClientView client = clientCommandService.createClient(cmd);
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -40,6 +42,7 @@ public class ClientCommandController {
 
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ClientView>> update(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id,
             @Valid @RequestBody ClientUpdateCommand cmd
@@ -53,6 +56,7 @@ public class ClientCommandController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<Void>> delete(@PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
         clientCommandService.deleteClient(id);
         return ResponseEntity.ok(
@@ -61,6 +65,7 @@ public class ClientCommandController {
     }
 
     @PostMapping(value = "/{id}/documentation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<DocumentationView>> uploadDocumentation(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id,
             @RequestPart("nidaNumber") @NotBlank(message = "NIDA number is required") String nidaNumber,
@@ -78,6 +83,7 @@ public class ClientCommandController {
 
 
     @PostMapping(value = "/{id}/documentation/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('LOAN_OFFICER', 'ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<DocumentationView>> updateDocumentation(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id,
             @RequestPart("nidaNumber") @NotBlank(message = "NIDA number is required") String nidaNumber,

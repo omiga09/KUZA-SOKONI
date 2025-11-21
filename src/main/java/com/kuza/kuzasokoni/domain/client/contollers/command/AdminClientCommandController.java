@@ -11,11 +11,12 @@ import com.kuza.kuzasokoni.domain.client.services.command.ClientCommandService;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/admin/clients")
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 @Validated
 public class AdminClientCommandController {
@@ -24,6 +25,7 @@ public class AdminClientCommandController {
     private final ClientCommandService clientCommandService;
 
     @PutMapping("/{id}/activate")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ClientView>> activateClient(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
 
@@ -47,6 +49,7 @@ public class AdminClientCommandController {
 
 
     @PutMapping("/{id}/verify")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ClientView>> verifyClient(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
 
@@ -69,6 +72,7 @@ public class AdminClientCommandController {
     }
 
     @PutMapping("/{id}/submit")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
     public ResponseEntity<StandardResponse<ClientView>> submitClient(
             @PathVariable @Min(value = 1, message = "Client ID must be greater than 0") Long id) {
 
